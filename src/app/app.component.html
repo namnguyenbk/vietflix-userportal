@@ -3,27 +3,29 @@
     <nz-header>
       <div class="app-header">
         <div class="sidebar-logo">
-          <a href="https://ng.ant.design/" target="_blank">
+          <a routerLink="">
             <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
             <h1>Vietflix</h1>
           </a>
         </div>
         
         <div class="search-bar">
-          <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton" class="search-inputs">
-            <input type="text" nz-input placeholder="input search text" />
+          <nz-input-group nzSearch [nzAddOnAfter]="suffixIconSearch" class="search-inputs">
+            <input type="text" nz-input placeholder="Nhập từ khoá tìm kiếm" />
           </nz-input-group>
 
           <div class="login-button" *ngIf="true">
-            <button nz-button nzType="danger">Login</button>
+            <a routerLink="login">
+              <button nz-button nzType="danger">Đăng nhập</button>
+            </a>
           </div>
           <div>
             <nz-avatar [nzSize]="50" nzIcon="user" *ngIf="false" ></nz-avatar>
           </div>
         </div>
 
-        <ng-template #suffixIconButton>
-          <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
+        <ng-template #suffixIconSearch>
+          <button nz-button nzSearch><i nz-icon nzType="search"></i></button>
         </ng-template>
       </div>
     </nz-header>

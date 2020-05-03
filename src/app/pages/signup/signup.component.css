@@ -1,0 +1,27 @@
+.login-form {
+    /* max-width: 300px; */
+  }
+
+  .login-form-margin {
+    margin-bottom: 16px;
+  }
+
+  .login-form-forgot {
+    color: white;
+    float: right;
+  }
+
+  .login-form-signup {
+    color: white;
+    float: left;
+  }
+
+  .login-form-button {
+    width: 100%;
+  }
+
+  .title-dn{
+      margin-top: 100px;
+      text-align: center;
+      color: white;
+  }

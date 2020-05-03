@@ -1,0 +1,81 @@
+
+  <div nz-row  nzAlign="middle" nzGutter="24">
+    <div nz-col nzSpan="8"></div>
+    <div nz-col nzSpan="8">
+        <h3 nz-typography class="title-dn">Đăng ký</h3>
+        <form nz-form [formGroup]="validateForm" class="signup-form" (ngSubmit)="submitForm()">
+
+            <nz-form-item>
+                <nz-form-control nzErrorTip="Vui lòng nhập tên!">
+                  <nz-input-group nzPrefixIcon="profile">
+                    <input type="text" nz-input formControlName="name" placeholder="Tên người dùng" />
+                  </nz-input-group>
+                </nz-form-control>
+              </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Vui lòng nhập email!">
+            <nz-input-group nzPrefixIcon="user">
+              <input type="text" nz-input formControlName="email" placeholder="Email" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Vui lòng nhập mật khẩu( tối thiểu 6 ký tự)!">
+            <nz-input-group nzPrefixIcon="lock">
+              <input type="password" nz-input formControlName="password" placeholder="Mật khẩu" />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-control nzErrorTip="2 mật khẩu phải khớp!">
+              <nz-input-group nzPrefixIcon="lock">
+                <input type="password" nz-input formControlName="re_password" placeholder="Nhập lại mật khẩu" />
+              </nz-input-group>
+            </nz-form-control>
+          </nz-form-item>
+
+        <div nz-row class="login-form-margin" *ngIf="show_error">
+          <nz-alert nzType="error" nzMessage="{{error_message}}" nzShowIcon></nz-alert>
+        </div>        
+
+        <div nz-row class="login-form-margin">
+          <div nz-col [nzSpan]="12">
+            <!-- <a class="login-form-signup" routerLink="/signup">Đăng ký tài khoản</a> -->
+          </div>
+          <div nz-col [nzSpan]="12">
+            <a class="login-form-forgot" routerLink="/login">Quay về trang nhập</a>
+          </div>
+        </div>
+        <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'" [nzLoading]="isLoading_login">
+          <span>Đăng ký</span>
+        </button>
+      </form>
+    </div>
+    <div nz-col nzSpan="8"></div>
+  </div>
+
+  <nz-modal [(nzVisible)]="isTokenPass" nzTitle="Nhập mã xác thực" nzMaskClosable="false" nzClosable="false">
+    <nz-alert nzType="success" nzMessage="Mã xác thực đã được gửi tới {{current_email}}" nzShowIcon>
+    </nz-alert>
+    <br>
+    <span>Nếu chưa nhận được trong vòng 5 phút </span> <button nz-button nzType="primary" (click)="resend_email()" [nzLoading]="isLoading_resend">Gửi lại</button>
+    <form nz-form  [formGroup]="tokenForm">
+      <br>
+      <nz-form-item>
+        <nz-form-control nzErrorTip="Vui lòng nhập mã xác thực">
+          <nz-input-group nzPrefixIcon="property-safety">
+            <input formControlName="token" nz-input placeholder="Mã xác thực" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <div nz-row class="login-form-margin" *ngIf="show_token_error">
+      <nz-alert nzType="error" nzMessage="Lỗi xác thực mã. Vui lòng thử lại!" nzShowIcon></nz-alert>
+    </div>
+    <div *nzModalFooter>
+      <button  *ngIf="!isLoading_resend" nz-button nzType="primary" (click)="handleOkToken()" [nzLoading]="isLoading_checkToken">Gửi</button>
+    </div>
+  </nz-modal>
