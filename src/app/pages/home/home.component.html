@@ -1,1 +1,18 @@
-<p>home works!</p>
+<h3 style="color: white;">Danh sách yêu thích của bạn</h3>
+<nz-list [nzDataSource]="data" [nzRenderItem]="item" [nzGrid]="{ gutter: 8, xs: 24, sm: 12, md: 6, lg: 6, xl: 4 }">
+    <ng-template #item let-item>
+      <nz-list-item [nzContent]="nzContent" >
+        <ng-template #nzContent>
+          <nz-card nzHoverable style="width:200px;" [nzCover]="coverTemplate">
+            <h4>Test</h4>
+            <icon></icon>
+          </nz-card>
+        </ng-template>
+        <ng-template #coverTemplate>
+            <img alt="example" src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />
+          </ng-template>
+      </nz-list-item>
+    </ng-template>
+    
+  </nz-list>
+

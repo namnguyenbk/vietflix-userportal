@@ -6,10 +6,31 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  data = [
+    {
+      title: 'Title 1'
+    },
+    {
+      title: 'Title 2'
+    },
+    {
+      title: 'Title 3'
+    },
+    {
+      title: 'Title 4'
+    },
+    {
+      title: 'Title 5'
+    },
+    {
+      title: 'Title 6'
+    }
+  ];
 
   constructor() { }
 
   ngOnInit() {
+    
   }
 
 }

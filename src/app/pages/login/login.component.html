@@ -110,8 +110,21 @@
     </div>
   </nz-modal>
 
-  <nz-result *ngIf="has_role" nzStatus="403" nzTitle="403" nzSubTitle="Tài khoản đã bị khoá.">
+  <nz-result *ngIf="has_role" nzStatus="403" [nzTitle]="title_403" [nzSubTitle]="subtitle_403">
     <div nz-result-extra>
-      <button nz-button nzType="primary" (click)="has_role=false">Trở về trang chủ</button>
+        <a  routerLink="/home">
+      <button nz-button nzType="primary" >
+         
+            Trở về trang chủ
+          
+          </button>
+        </a>
     </div>
+    <ng-template #title_403 >
+        <h3 style="color: white; text-align: center;">403</h3>
+    </ng-template>
+
+    <ng-template #subtitle_403 >
+        <h4 style="color: white; text-align: center;">Tài khoản đã bị khoá.</h4>
+    </ng-template>
   </nz-result>

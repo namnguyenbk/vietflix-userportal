@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -34,8 +35,10 @@ export class LoginComponent implements OnInit {
   isLoading_resend = false;
   isLoading_checkToken = false;
 
+  has_role = false;
+
   constructor(private fb: FormBuilder, private auth_service: AuthService, public router: Router,
-    private notification: NzNotificationService) {
+    private notification: NzNotificationService, private user_services: UserService) {
   }
 
   submitForm(): void {
@@ -58,6 +61,7 @@ export class LoginComponent implements OnInit {
         }
         if(res.user.status == 'blocked'){
           this.is_blocked = true;
+          this.has_role = true;
           return;
         }else{
           this.router.navigate(['../'])
@@ -236,6 +240,12 @@ export class LoginComponent implements OnInit {
       pass: [null, [Validators.required]],
       re_pass: [null, [Validators.required]],
     });
+
+    this.user_services.get_me().subscribe((res:any)=>{
+      if(res.status == 'blocked'){
+        this.has_role = true;
+      }
+    })
   }
 
   resend_email(){

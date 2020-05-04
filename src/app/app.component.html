@@ -10,31 +10,163 @@
         </div>
         
         <div class="search-bar">
-          <nz-input-group nzSearch [nzAddOnAfter]="suffixIconSearch" class="search-inputs">
-            <input type="text" nz-input placeholder="Nhập từ khoá tìm kiếm" />
+          <nz-input-group  nzSearch [nzAddOnAfter]="suffixIconSearch" class="search-inputs">
+            <input style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: 0px solid rgb(20, 20, 20); border-bottom: 1px solid white;" type="text" nz-input placeholder="Nhập từ khoá tìm kiếm" />
           </nz-input-group>
 
-          <div class="login-button" *ngIf="true">
-            <a routerLink="login">
-              <button nz-button nzType="danger">Đăng nhập</button>
+          <div class="login-button">
+            <a routerLink="login" *ngIf="!me">
+              <button nz-button  nzType="danger">Đăng nhập</button>
+            </a>
+            <a *ngIf="me">
+              <button style="color: white; background-color: rgb(20, 20, 20); border: 0px;" nz-dropdown [nzDropdownMenu]="menu" nz-button >{{me.name}} <i nz-icon nzType="down"></i></button>
             </a>
           </div>
+          <!-- <a nz-dropdown [nzDropdownMenu]="menu"  *ngIf="me">
+            {{me.name}}
+            <i nz-icon nzType="down"></i>
+          </a> -->
+
+          <nz-dropdown-menu #menu="nzDropdownMenu" >
+            <ul nz-menu nzSelectable>
+              <li nz-menu-item (click)="open_info()">
+                Thông tin tài khoản
+              </li>
+              <li nz-menu-item (click)="open_change_password()">
+                Đổi mật khẩu
+              </li>
+              <!-- <li nz-submenu nzTitle="Thay đổi thông tin cá nhân">
+                <ul>
+                  <li nz-menu-item (click)="open_change_info()">Đổi email, tên hiển thị</li>
+                  <li nz-menu-item (click)="open_change_password()">Đổi mật khẩu</li>
+                </ul>
+              </li> -->
+              <li nz-menu-item>
+                <a style="color: red;" (click)="logout()">
+                  Đăng xuất
+                </a>
+                </li>
+            </ul>
+          </nz-dropdown-menu>
+
           <div>
-            <nz-avatar [nzSize]="50" nzIcon="user" *ngIf="false" ></nz-avatar>
+            <!-- <nz-avatar nz-dropdown [nzDropdownMenu]="menu" nzText="{{me.name[0]}}" [nzSize]="30" *ngIf="me" 
+            style="background-color:#87d068;"
+            ></nz-avatar> -->
+            <!-- <a nz-dropdown [nzDropdownMenu]="menu"  *ngIf="me">
+            {{me.name}}
+            <i nz-icon nzType="down"></i> -->
+          <!-- </a> -->
           </div>
         </div>
 
         <ng-template #suffixIconSearch>
-          <button nz-button nzSearch><i nz-icon nzType="search"></i></button>
+          <button nz-button nzSearch style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: rgb(20, 20, 20);" ><i nz-icon nzType="search"></i></button>
         </ng-template>
       </div>
     </nz-header>
 
     <nz-content>
       <div class="inner-content">
-        <router-outlet></router-outlet>
+        <router-outlet (activate)='onActivate($event)'></router-outlet>
       </div>
     </nz-content>
 
   </nz-layout>
 </nz-layout>
+
+
+<nz-modal *ngIf="me" [(nzVisible)]="is_show_change_info" nzTitle="Thay đổi thông tin cá nhân" (nzOnCancel)="infoCancel()" [(nzClosable)]="!isLoadingInfo"
+[(nzMaskClosable)]="!isLoadingInfo">
+<form nz-form  [formGroup]="change_info_form">
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Vui lòng nhập email">
+      <nz-input-group nzPrefixIcon="mail">
+        <input formControlName="email" nz-input placeholder="Nhập email mới" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Vui lòng nhập tên">
+      <nz-input-group nzPrefixIcon="user">
+        <input formControlName="name" nz-input placeholder="Nhập tên mới" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Nhập mật khẩu xác nhận">
+      <nz-input-group nzPrefixIcon="lock">
+        <input type="password" formControlName="password" nz-input placeholder="Nhập mật khẩu" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<div *nzModalFooter>
+  <button nz-button nzType="primary" (click)="infoOk()" [nzLoading]="isLoadingInfo">Gửi</button>
+</div>
+</nz-modal>
+
+<nz-modal *ngIf="me" [(nzVisible)]="isTokenPass" nzTitle="Nhập mã xác thực" (nzOnCancel)="handleCancelToken()" 
+[(nzClosable)]="!isLoadingToken" [(nzMaskClosable)]="!isLoadingToken"
+>
+  <nz-alert nzType="success" nzMessage="Mã xác thực đã được gửi tới {{this.change_info_form.controls['email'].value}}" nzShowIcon>
+  </nz-alert>
+  <form nz-form  [formGroup]="tokenForm">
+    <br>
+    <nz-form-item>
+      <nz-form-control nzErrorTip="Vui lòng nhập mã xác thực">
+        <nz-input-group nzPrefixIcon="property-safety">
+          <input formControlName="token" nz-input placeholder="Mã xác thực" />
+        </nz-input-group>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <div nz-row class="login-form-margin" *ngIf="show_token_error">
+    <nz-alert nzType="error" nzMessage="Lỗi xác thực mã. Vui lòng thử lại!" nzShowIcon></nz-alert>
+  </div>
+  <div *nzModalFooter>
+    <button nz-button nzType="primary" (click)="handleOkToken()" [nzLoading]="isLoadingToken">Gửi</button>
+  </div>
+</nz-modal>
+
+<nz-modal *ngIf="me" [(nzVisible)]="is_show_change_password" nzTitle="Thay đổi mật khẩu" (nzOnCancel)="passCancel()"
+[(nzClosable)]="!isLoadingPass" [(nzMaskClosable)]="!isLoadingPass"
+>
+<form nz-form  [formGroup]="change_passwors_form">
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Vui lòng nhập mật khẩu cũ">
+      <nz-input-group nzPrefixIcon="lock">
+        <input type="password" formControlName="old_password" nz-input placeholder="Nhập mật khẩu cũ" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Vui lòng nhập mật khẩu mới">
+      <nz-input-group nzPrefixIcon="lock">
+        <input type="password" formControlName="new_password" nz-input placeholder="Nhập mật khẩu mới" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control nzErrorTip="Hai mật khẩu không khớp">
+      <nz-input-group nzPrefixIcon="lock">
+        <input type="password" formControlName="renew_password" nz-input placeholder="Nhập lại mật khẩu mới" />
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+<div *nzModalFooter>
+  <button nz-button nzType="primary" (click)="passOk()" [nzLoading]="isLoadingPass">Gửi</button>
+</div>
+</nz-modal>
+
+
+<nz-modal *ngIf="me" [(nzVisible)]="is_view_info" nzTitle="Thông tin tài khoản"
+ nzOkText="Thay đổi thông tin" [nzCancelText]="null" (nzOnCancel)="is_view_info=false"
+ (nzOnOk)="is_view_info= false;open_change_info()"
+ >
+  <nz-descriptions nzTitle="{{me.name}}">
+    <nz-descriptions-item nzTitle="Địa chỉ email">{{me.email}}</nz-descriptions-item>
+  </nz-descriptions>
+</nz-modal>
