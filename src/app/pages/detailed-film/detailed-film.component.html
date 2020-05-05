@@ -1,1 +1,157 @@
-<p>detailed-film works!</p>
+<!-- <nz-skeleton [nzActive]="true" [nzLoading]="!film"></nz-skeleton> -->
+
+
+        <!-- <div class="container" *ngIf="film">
+            <video id="plyrID" controls playsinline poster="{{film.image_url}}">
+               <source src="{{current_video_url}}" type="video/mp4" size="576">
+            </video> -->
+          <!-- </div> -->
+          <div class="container">
+          <video id="plyrID" style="max-height: 500px;" controls playsinline>
+             <source src="{{current_video_url}}" >
+            </video>
+            <h4 *ngIf="film && film.type==2" style="color: white;">{{film.name}} - Tập {{current_episode}}</h4>
+        </div>
+<div nz-row [nzGutter]="6" *ngIf="film">
+    <div nz-col nzSpan="14">
+        <div nz-row [nzGutter]="3">
+            <div nz-col nzSpan="12">
+                <img class="poster" src="{{film.image_url}}" />
+            </div>
+            <div nz-col nzSpan="12">
+                <nz-descriptions [nzTitle]="filmnametitle" [nzColumn]="1">
+                    <nz-descriptions-item [nzTitle]="null">
+                        <p style="color: white;">Tên phụ: {{film.meta_data.subname}}</p>
+                      </nz-descriptions-item>
+                    <nz-descriptions-item [nzTitle]="null">
+                        <p style="color: white;">Đạo diễn: {{film.meta_data.director}}</p>
+                        </nz-descriptions-item>
+                    <nz-descriptions-item [nzTitle]="null">
+                        <p style="color: white;">Diễn viên: {{film.meta_data.actor}}</p>
+                        </nz-descriptions-item>
+                    <nz-descriptions-item [nzTitle]="null">
+                        <p style="color: white;">Thể loại:</p>
+                        <ng-template ngFor let-data [ngForOf]="film.categories"> 
+                            <nz-tag [nzColor]="'#87d068'"> <a routerLink="/category/{{data.id}}">{{ data.name }}</a></nz-tag>
+                        </ng-template>
+                    </nz-descriptions-item>
+                    <nz-descriptions-item [nzTitle]="null">
+                        <p style="color: white;">Kiểu phát hành: {{film.type==1?'Phim lẻ, chiếu rạp':'Phim bộ, series'}}</p>
+                        </nz-descriptions-item>
+                    <nz-descriptions-item [nzTitle]="null">
+                        <p style="color: white;">Sản xuất: {{film.meta_data.brand}}({{film.meta_data.release_date?film.meta_data.release_date.split('T')[0]:'Năm sản xuất chưa rõ'}})</p>
+                         
+                    </nz-descriptions-item>
+                    <nz-descriptions-item [nzTitle]="null">
+                        <p style="color: white;">Tóm tắt nội dung phim: {{film.meta_data.description}}</p>
+                        </nz-descriptions-item>
+                  </nz-descriptions>
+
+                  <ng-template #filmnametitle >
+                      <p style="color: white;">{{film.name}}
+                    </p>
+                    
+                  </ng-template>
+            </div>
+          </div>
+          <div nz-row [nzGutter]="3" *ngIf="film.type==2">
+            <!-- <h4 [ngStyle]="{'margin-top.px': 16 }">Danh sách tập phim</h4>
+            <div nz-col nzSpan="24" class="episode-area" [ngStyle]="{ 'margin-bottom.px': 16, 'margin-top.px': 16 }">
+                <nz-radio-group [(ngModel)]="current_episode">
+                    <ng-template ngFor let-data [ngForOf]="film.episodes">
+                        <label nz-radio-button nzValue="{{data.id}}" (click)="change_episode(data.id)">{{data.id}}</label>
+                    </ng-template>                                                                          
+                  </nz-radio-group>
+            </div> -->
+          </div>
+    </div>
+    <div nz-col nzSpan="10" >
+        <div nz-row [nzGutter]="3">
+            <span>
+                <p style="color: white;">Thêm vào yêu thích:
+                    <i style="color: pink; font-size: 20px;" nz-icon nzType="plus" (click)="add_favorite()"></i></p>
+            </span>
+            <span>
+                <p style="color: white;">Đánh giá:
+                    <i style="color: yellow;" nz-icon nzType="star"></i>
+                    <i style="color: yellow;" nz-icon nzType="star"></i>
+                    <i style="color: yellow;" nz-icon nzType="star"></i>
+                    <i style="color: yellow;" nz-icon nzType="star"></i>
+                    <i style="color: yellow;" nz-icon nzType="star"></i>
+                </p>
+            </span>
+        </div>
+        <span>
+            <h4 [ngStyle]="{'margin-top.px': 16, 'color': 'white' }">Danh sách tập phim</h4>
+            <div nz-col nzSpan="24" class="episode-area" [ngStyle]="{ 'margin-bottom.px': 16, 'margin-top.px': 16 }">
+                <nz-radio-group [(ngModel)]="current_episode">
+                    <ng-template ngFor let-data [ngForOf]="film.episodes">
+                        <label nz-radio-button nzValue="{{data.id}}" (click)="change_episode(data.id, data.video_url)">{{data.id}}</label>
+                    </ng-template>                                                                          
+                  </nz-radio-group>
+            </div>
+        </span>
+      <!-- <iframe *ngIf="film.meta_data.trailer_url" class="trailer" max-width="560" max-height="315" width="400" height="225" [src]="sanitizer.bypassSecurityTrustResourceUrl(film.meta_data.trailer_url)" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+    </div>
+  </div>
+
+  <nz-comment *ngIf="film">
+    <nz-comment-content>
+      <nz-form-item>
+        <textarea style="color: white; background-color: rgb(20, 20, 20);" [(ngModel)]="comment" nz-input rows="4"></textarea>
+      </nz-form-item>
+      <nz-form-item>
+        <button nz-button nzType="primary" [nzLoading]="submitting" [disabled]="!comment" (click)="handleSubmit()">
+          Thêm bình luận
+        </button>
+      </nz-form-item>
+    </nz-comment-content>
+  </nz-comment>
+  <h4 [ngStyle]="{ 'margin-bottom.px': 16, 'margin-top.px': 16 }" style="color: white;">Danh sách bình luận</h4>
+  <nz-list 
+  *ngIf="film"
+      class="demo-loadmore-list"
+      [nzDataSource]="list"
+      [nzItemLayout]="'horizontal'"
+      [nzLoading]="initLoading"
+      [nzRenderItem]="item"
+      [nzLoadMore]="loadMore"
+      [nzNoResult]="norult"
+    >
+      <ng-template #item let-item>
+        <nz-list-item
+          [nzContent]="item.loading ? '' : item.text"
+          [nzActions]="item.loading ? [] : [editAction, moreAction]"
+        >
+          <nz-skeleton [nzAvatar]="true" [nzActive]="true" [nzTitle]="false" [nzLoading]="item.loading">
+            <ng-template #editAction><a (click)="delete_comment(item.id, item.text)">
+                <span nz-text nzType="danger">Xoá</span>
+            </a></ng-template>
+            <ng-template #moreAction><a (click)="block_user(item.user_id, item.username)" *ngIf="item.user_status=='active'">
+                <span nz-text nzType="danger">Khoá tài khoản</span>
+                </a></ng-template>
+            <nz-list-item-meta
+              [nzTitle]="nzTitle"
+              [nzDescription]="nzDes"
+            >
+              <ng-template #nzTitle>
+                <a routerLink="/user?user_id={{item.user_id}}">{{ item.username }}</a>
+              </ng-template>
+              <ng-template #nzDes>
+                <nz-tag *ngIf="item.user_status=='active'" [nzColor]="'#87d068'">Tài khoản hoạt động</nz-tag>
+                <nz-tag *ngIf="item.user_status=='blocked'" [nzColor]="'#f50'">Tài khoản bị khoá</nz-tag>
+              </ng-template>
+            </nz-list-item-meta>
+          </nz-skeleton>
+        </nz-list-item>
+      </ng-template>
+      <ng-template #loadMore>
+        <div class="loadmore" *ngIf="list.length >0">
+          <button nz-button *ngIf="!loadingMore" (click)="onLoadMore()">Hiển thị thêm</button>
+        </div>
+      </ng-template>
+    </nz-list>
+
+    <ng-template #norult >
+        <p style="color: white;">Không có bình luận nào</p>
+    </ng-template>

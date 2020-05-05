@@ -28,4 +28,14 @@ export class CommentService {
 
     return this.http.delete(url, {headers})
   }
+
+  add_comment(comment:any){
+    let url = environment.base_url_api + `/comments`
+    let access_token = localStorage.getItem('access_token')
+    let headers = {
+      'Authorization': 'Bearer '+ access_token
+    }
+
+    return this.http.post(url, {comment}, {headers})
+  }
 }
