@@ -88,8 +88,8 @@ export class AppComponent implements OnInit {
   logout(){
     this.me = null;
     this.is_logged = false;
-    localStorage.removeItem('access_token')
-    this.router.navigate['../']
+    localStorage.removeItem('access_token');
+    this.router.navigate['../'];
   }
 
   open_change_info(){

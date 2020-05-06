@@ -53,3 +53,21 @@ h4{
   position: relative;
     margin-bottom: 10px;
 } 
+
+#favofrie:hover{
+  cursor: pointer;
+  border: 1px solid pink;
+}
+
+[nz-icon] {
+  margin-right: 6px;
+  font-size: 15px;
+}
+
+[nz-icon]:hover {
+  cursor: pointer;
+}
+
+.rating:hover{
+  color: yellow;
+}

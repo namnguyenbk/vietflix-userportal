@@ -110,14 +110,24 @@ export class FilmService {
     return this.http.get(url, {headers})
   }
 
-  send_rating(rate:any){
+  send_rating(rating:any){
     let url = environment.base_url_api + `/ratings`
     let access_token = localStorage.getItem('access_token')
     let headers = {
       'Authorization': 'Bearer '+ access_token
     }
 
-    return this.http.post(url, {rate},{headers})
+    return this.http.post(url, rating,{headers})
+  }
+
+  view(film_id:number){
+    let url = environment.base_url_api + `/view/${film_id}`
+    let access_token = localStorage.getItem('access_token')
+    let headers = {
+      'Authorization': 'Bearer '+ access_token
+    }
+
+    return this.http.post(url,{headers})
   }
 
   
