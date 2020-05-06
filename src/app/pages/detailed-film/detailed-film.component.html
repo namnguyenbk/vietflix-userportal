@@ -10,7 +10,7 @@
           <video id="plyrID" style="max-height: 500px;" controls playsinline>
              <source src="{{current_video_url}}" >
             </video>
-            <h4 *ngIf="film && film.type==2" style="color: white;">{{film.name}} - Tập {{current_episode}}</h4>
+            <h3 class="class-h4" *ngIf="film && film.type==2" style="color: white;">{{film.name}} - Tập {{current_episode}}</h3>
         </div>
 <div nz-row [nzGutter]="6" *ngIf="film">
     <div nz-col nzSpan="14">
@@ -97,8 +97,9 @@
                 </p>
             </span>
         </div>
+        <nz-divider></nz-divider>
         <span>
-            <h4 [ngStyle]="{'margin-top.px': 16, 'color': 'white' }">Danh sách tập phim</h4>
+            <h4  class="class-h4" [ngStyle]="{'margin-top.px': 16, 'color': 'white' }">Danh sách tập phim</h4>
             <div nz-col nzSpan="24" class="episode-area" [ngStyle]="{ 'margin-bottom.px': 16, 'margin-top.px': 16 }">
                 <nz-radio-group [(ngModel)]="current_episode">
                     <ng-template ngFor let-data [ngForOf]="film.episodes">
@@ -123,50 +124,32 @@
       </nz-form-item>
     </nz-comment-content>
   </nz-comment>
-  <h4 [ngStyle]="{ 'margin-bottom.px': 16, 'margin-top.px': 16 }" style="color: white;">Danh sách bình luận</h4>
-  <nz-list 
-  *ngIf="film"
-      class="demo-loadmore-list"
-      [nzDataSource]="list"
-      [nzItemLayout]="'horizontal'"
-      [nzLoading]="initLoading"
-      [nzRenderItem]="item"
-      [nzLoadMore]="loadMore"
-      [nzNoResult]="norult"
-    >
-      <ng-template #item let-item>
-        <nz-list-item
-          [nzContent]="item.loading ? '' : item.text"
-          [nzActions]="item.loading ? [] : [editAction, moreAction]"
-        >
-          <nz-skeleton [nzAvatar]="true" [nzActive]="true" [nzTitle]="false" [nzLoading]="item.loading">
-            <ng-template #editAction><a (click)="delete_comment(item.id, item.text)">
-                <span nz-text nzType="danger">Xoá</span>
-            </a></ng-template>
-            <ng-template #moreAction><a (click)="block_user(item.user_id, item.username)" *ngIf="item.user_status=='active'">
-                <span nz-text nzType="danger">Khoá tài khoản</span>
-                </a></ng-template>
-            <nz-list-item-meta
-              [nzTitle]="nzTitle"
-              [nzDescription]="nzDes"
-            >
-              <ng-template #nzTitle>
-                <a routerLink="/user?user_id={{item.user_id}}">{{ item.username }}</a>
-              </ng-template>
-              <ng-template #nzDes>
-                <nz-tag *ngIf="item.user_status=='active'" [nzColor]="'#87d068'">Tài khoản hoạt động</nz-tag>
-                <nz-tag *ngIf="item.user_status=='blocked'" [nzColor]="'#f50'">Tài khoản bị khoá</nz-tag>
-              </ng-template>
-            </nz-list-item-meta>
-          </nz-skeleton>
-        </nz-list-item>
+  <h3 [ngStyle]="{ 'margin-bottom.px': 16, 'margin-top.px': 16 }" style="color: white; ">Danh sách bình luận</h3>
+  
+  <nz-list [nzLoadMore]='loadMore' style="color: white; padding: 50px; border: 1px dotted white; border-radius: 3px;" *ngIf="slice_comments"  [nzDataSource]="slice_comments" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
+    <ng-template #item let-item>
+      <nz-comment [nzAuthor]="author" [nzDatetime]="return_data(item.created)">
+        <nz-avatar nz-comment-avatar nzText="{{item.username[0]}}" style="background-color:#87d068;" [nzSrc]="item.avatar"></nz-avatar>
+        <nz-comment-content>
+          <p>{{ item.text }}</p>
+        </nz-comment-content>
+        <nz-comment-action *ngIf="me.id == item.user_id" >
+            <p (click)="delete_comment(item.id)" style="color: red;"><i nz-icon nzType="delete" style="color: white;" nzTheme="outline"></i>Xoá</p>
+            </nz-comment-action>
+      </nz-comment>
+      <nz-divider></nz-divider>
+      <ng-template #author >
+        <h3 style="color: white;">{{item.username}}</h3>
       </ng-template>
-      <ng-template #loadMore>
-        <div class="loadmore" *ngIf="list.length >0">
-          <button nz-button *ngIf="!loadingMore" (click)="onLoadMore()">Hiển thị thêm</button>
-        </div>
-      </ng-template>
-    </nz-list>
+    </ng-template>
+  </nz-list>
+
+    
+      <ng-template #loadMore >
+        <div class="loadmore" *ngIf="slice_comments && slice_comments.length >10">
+            <button nz-button *ngIf="!loadingMore" (click)="onLoadMore()">Hiển thị thêm</button>
+          </div>
+    </ng-template>
 
     <ng-template #norult >
         <p style="color: white;">Không có bình luận nào</p>

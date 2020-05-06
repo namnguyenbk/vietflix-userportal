@@ -29,13 +29,13 @@ export class CommentService {
     return this.http.delete(url, {headers})
   }
 
-  add_comment(comment:any){
-    let url = environment.base_url_api + `/comments`
+  add_comment(text:string, film_id:number){
+    let url = environment.base_url_api + `/films/${film_id}/comments`
     let access_token = localStorage.getItem('access_token')
     let headers = {
       'Authorization': 'Bearer '+ access_token
     }
 
-    return this.http.post(url, {comment}, {headers})
+    return this.http.post(url, {text}, {headers})
   }
 }

@@ -6,6 +6,7 @@ import { UserService } from 'src/app/services/user.service';
 import { NzModalService, NzNotificationService, NzMessageService } from 'ng-zorro-antd';
 import { DomSanitizer } from '@angular/platform-browser';
 import * as Plyr from 'plyr';
+import { distanceInWords } from 'date-fns';
 @Component({
   selector: 'app-detailed-film',
   templateUrl: './detailed-film.component.html',
@@ -15,19 +16,19 @@ export class DetailedFilmComponent implements OnInit {
 
   initLoading = true; // bug
   loadingMore = false;
-  data: any[] = [];
-  list: Array<{ loading: boolean; name: any }> = [];
 
   film_id: number;
   film: any;
-  comments: any;
 
-  score = 2 ;
+  score = 0 ;
   temp_score;
 
   me: any;
 
-  current_episode = localStorage.getItem('video_id');;
+  list_comments = [];
+  slice_comments = [];
+
+  current_episode = localStorage.getItem('video_id');
   // current_video_url : string;
 
   is_love = false;
@@ -72,42 +73,25 @@ export class DetailedFilmComponent implements OnInit {
       this.temp_score = this.score;
 
       this.film_service.view(this.film.id).subscribe(res=>{});    
+      this.comment_service.get_comments(this.film.id).subscribe((res: any) => {
+        this.list_comments = res;
+        this.slice_comments = this.list_comments.slice(0, 10)
+        this.initLoading = false;
+      });
     })
-
-    this.getData((res: any) => {
-      this.data = res;
-      this.list = res;
-      this.initLoading = false;
-    });
-  }
-
-  getData(callback: (res: any) => void): void {
-    this.comment_service.get_comments(this.film_id).subscribe((res: any) => callback(res));
   }
 
   onLoadMore(): void {
+    this.slice_comments = this.list_comments.slice(0, this.slice_comments.length+10)
   }
 
   change_episode(id: string, url: string){
-    // console.log(id)
-    // this.current_episode = id
     localStorage.setItem('video_url', url);
     localStorage.setItem('video_id', id);
-    // this.router.navigate([`/film/${this.film.id}/episodes/${id}`]);
-    // this.router.navigateByUrl('home', { skipLocationChange: true });
-    // this.router.navigate([`film/${this.film.id}`]);
     window.scroll(0,0);
     this.router.navigateByUrl(`/film/${this.film.id}/episodes/0`, { skipLocationChange: true }).then(() => {
       this.router.navigate([`/film/${this.film.id}`]);
     }); 
-    // this.player.source = {
-    //   type: 'video',
-    //   sources:[
-    //     {
-    //       src: url
-    //     }
-    //   ]
-    // }
   }
 
   get_trailer_url(){
@@ -115,7 +99,12 @@ export class DetailedFilmComponent implements OnInit {
   }
 
   handleSubmit(){
-    // this.comment_service.a
+    this.comment_service.add_comment(this.comment, this.film.id).subscribe((res:any)=>{
+      res.username = this.me.name
+      this.list_comments.push(res);
+      this.comment = null
+      this.slice_comments = this.list_comments.slice(0,10)
+    })
   }
 
   add_favorite(){
@@ -155,6 +144,17 @@ export class DetailedFilmComponent implements OnInit {
     }, error=>{
       this.message.create('error', error.error.error_message);
     });    
+  }
+
+  return_data(datetime){
+    return distanceInWords(datetime, new Date())
+  }
+
+  delete_comment(comment_id:number){
+    this.list_comments = this.list_comments.filter(function(value, index, arr){ return value.id != comment_id;});
+      this.slice_comments = this.list_comments.filter(function(value, index, arr){ return value.id != comment_id;});
+    this.comment_service.delete_comments(comment_id).subscribe(res=>{
+    })
   }
 
 }
