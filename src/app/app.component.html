@@ -5,14 +5,16 @@
         <div class="sidebar-logo">
           <a routerLink="">
             <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
-            <h1>Vietflix</h1>
+            <h1>FilmO</h1>
           </a>
         </div>
         
         <div class="search-bar">
           <nz-input-group  nzSearch [nzAddOnAfter]="suffixIconSearch" class="search-inputs">
-            <input style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: 0px solid rgb(20, 20, 20); border-bottom: 1px solid white;" type="text" nz-input placeholder="Nhập từ khoá tìm kiếm" />
+            <input [(ngModel)]="inputValue" (ngModelChange)="onChange($event)"
+            [nzAutocomplete]="auto" style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: 0px solid rgb(20, 20, 20); border-bottom: 1px solid white;" type="text" nz-input placeholder="Nhập từ khoá tìm kiếm" />
           </nz-input-group>
+          <nz-autocomplete [nzDataSource]="filteredOptions" #auto></nz-autocomplete>
 
           <div class="login-button">
             <a routerLink="login" *ngIf="!me">
@@ -61,7 +63,7 @@
         </div>
 
         <ng-template #suffixIconSearch>
-          <button nz-button nzSearch style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: rgb(20, 20, 20);" ><i nz-icon nzType="search"></i></button>
+          <button (click)="search()" nz-button nzSearch style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: rgb(20, 20, 20);" ><i nz-icon nzType="search"></i></button>
         </ng-template>
       </div>
     </nz-header>

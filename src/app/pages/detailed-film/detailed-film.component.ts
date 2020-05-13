@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FilmService } from 'src/app/services/film.service';
 import { CommentService } from 'src/app/services/comment.service';
@@ -25,6 +25,8 @@ export class DetailedFilmComponent implements OnInit {
 
   me: any;
 
+  is_logged = false;
+
   list_comments = [];
   slice_comments = [];
 
@@ -36,28 +38,66 @@ export class DetailedFilmComponent implements OnInit {
   comment: string;
   submitting= false;
   public player;
+  public player2;
 
   current_video_url = localStorage.getItem('video_url');
+
+  visible_comment = false;
+
+  share_link = ""
+
+  trailer = true;
+
+  episode = 0
+
 
   
   constructor(private route: ActivatedRoute, private film_service: FilmService, private comment_service: CommentService,
     private modalService: NzModalService, private user_service: UserService, private router: Router,
     public sanitizer : DomSanitizer, private message: NzMessageService) { 
       this.film_id = parseInt(this.route.snapshot.paramMap.get("film_id"));
+      this.episode = parseInt(this.route.snapshot.queryParamMap.get("episodes"));
     this.film_service.get_film(this.film_id).subscribe((res:any)=>{
       this.film = res
       this.film.meta_data = JSON.parse(res.meta_data);
       this.film.episodes = JSON.parse(res.episodes);
       this.is_love = this.film.favorite;
       this.score = this.film.score;
+      this.is_logged = true;
+      this.share_link = this.get_share_link(this.film.id)
+      window.scroll(0,0);
+      this.film.meta_data.trailer_url = "https://www.youtube-nocookie.com/embed/" + this.film.meta_data.trailer_url
 
-      if(this.film.video_url){
+      if(this.film.video_url && this.film.type == "1"){
         this.current_video_url = this.film.video_url;
       }else{
         this
         .current_video_url = this.film.episodes[0]['video_url'];
       }
+      if(this.film.type == "1"){
+        if(localStorage.getItem('video_url') != this.film.video_url){
+          localStorage.setItem('video_url', this.film.video_url)
+          this.router.navigateByUrl(`/film/${this.film.id}/episodes/0`, { skipLocationChange: true }).then(() => {
+            this.router.navigate([`/film/${this.film.id}`]);
+          }); 
+        }
+      }else{
+      }
 
+      this.comment_service.get_comments(this.film.id).subscribe((res: any) => {
+        this.list_comments = res;
+        this.slice_comments = this.list_comments.slice(0, 10)
+        this.initLoading = false;
+      }, error=>{console.log('errrprprpr')});
+
+    }, error =>{
+      this.film_service.get_film_non_user(this.film_id).subscribe((res:any)=>{
+        this.film = res;
+        this.film.meta_data = JSON.parse(res.meta_data);
+        this.film.episodes = JSON.parse(res.episodes);
+        this.film.meta_data.trailer_url = "https://www.youtube-nocookie.com/embed/" + this.film.meta_data.trailer_url
+        this.is_logged = false;
+      })
     });
       
     }
@@ -68,16 +108,40 @@ export class DetailedFilmComponent implements OnInit {
       captions: { active: true }
     });
 
+    this.player.on('play', event => {
+      this.trailer = false;
+      if(!this.me){
+        this.router.navigate(['/login'])
+      }
+    });
+
+    this.player.on('pause', event => {
+      this.trailer = true;
+    });
+
+          // this.player2 = new Plyr('#plyrID2', { 
+      //   captions: { active: true }
+      // });
+      // this.player2.source = {
+      //   type: 'video',
+      //   sources: [
+      //     {
+      //       src: this.film.meta_data.trailer_url,
+      //       provider: 'youtube',
+      //     },
+      //   ],
+      // };
+    
+
+
     this.user_service.get_me().subscribe((res:any)=>{
       this.me = res;
       this.temp_score = this.score;
+      this.film_service.view(this.film.id, this.me.id).subscribe(res=>{window.scroll(0,0);}, error=>{window.scroll(0,0);});    
 
-      this.film_service.view(this.film.id).subscribe(res=>{});    
-      this.comment_service.get_comments(this.film.id).subscribe((res: any) => {
-        this.list_comments = res;
-        this.slice_comments = this.list_comments.slice(0, 10)
-        this.initLoading = false;
-      });
+    }, error=>{
+      this.is_logged = false;
+      this.film_service.view(this.film.id, null).subscribe(res=>{window.scroll(0,0);}, error=>{window.scroll(0,0);});  
     })
   }
 
@@ -154,7 +218,20 @@ export class DetailedFilmComponent implements OnInit {
     this.list_comments = this.list_comments.filter(function(value, index, arr){ return value.id != comment_id;});
       this.slice_comments = this.list_comments.filter(function(value, index, arr){ return value.id != comment_id;});
     this.comment_service.delete_comments(comment_id).subscribe(res=>{
-    })
+    });
+  }
+
+  open_comment(){
+    this.slice_comments = this.list_comments.slice(0, this.slice_comments.length+10)
+    this.visible_comment = true;
+  }
+
+  close_comment(){
+    this.visible_comment = false;
+  }
+
+  get_share_link(film_id){
+    return `https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2F${this.router.url}%2Ffilm%2F${film_id}&layout=button&size=small&width=76&height=20&appId`
   }
 
 }

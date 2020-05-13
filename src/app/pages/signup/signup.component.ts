@@ -120,6 +120,7 @@ export class SignupComponent implements OnInit {
         this.isTokenPass = false;
         localStorage.setItem('access_token', this.access_token)
         this.router.navigate(['../']);
+        location.reload()
     },
 
       (error) => {

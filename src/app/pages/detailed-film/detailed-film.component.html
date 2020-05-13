@@ -1,11 +1,7 @@
-<!-- <nz-skeleton [nzActive]="true" [nzLoading]="!film"></nz-skeleton> -->
 
-
-        <!-- <div class="container" *ngIf="film">
-            <video id="plyrID" controls playsinline poster="{{film.image_url}}">
-               <source src="{{current_video_url}}" type="video/mp4" size="576">
-            </video> -->
-          <!-- </div> -->
+<div class="example" *ngIf="!film">
+    <nz-spin nzSimple></nz-spin>
+  </div>
           <div class="container">
           <video id="plyrID" style="max-height: 500px;" controls playsinline>
              <source src="{{current_video_url}}" >
@@ -20,19 +16,19 @@
             </div>
             <div nz-col nzSpan="12">
                 <nz-descriptions [nzTitle]="filmnametitle" [nzColumn]="1">
-                    <nz-descriptions-item [nzTitle]="null">
+                    <nz-descriptions-item *ngIf="film.meta_data.subname" [nzTitle]="null">
                         <p style="color: white;">Tên phụ: {{film.meta_data.subname}}</p>
                       </nz-descriptions-item>
-                    <nz-descriptions-item [nzTitle]="null">
+                    <nz-descriptions-item *ngIf="film.meta_data.director" [nzTitle]="null">
                         <p style="color: white;">Đạo diễn: {{film.meta_data.director}}</p>
                         </nz-descriptions-item>
-                    <nz-descriptions-item [nzTitle]="null">
+                    <nz-descriptions-item *ngIf="film.meta_data.actor" [nzTitle]="null">
                         <p style="color: white;">Diễn viên: {{film.meta_data.actor}}</p>
                         </nz-descriptions-item>
                     <nz-descriptions-item [nzTitle]="null">
                         <p style="color: white;">Thể loại:</p>
                         <ng-template ngFor let-data [ngForOf]="film.categories"> 
-                            <nz-tag [nzColor]="'#87d068'"> <a routerLink="/category/{{data.id}}">{{ data.name }}</a></nz-tag>
+                            <nz-tag [nzColor]="'#87d068'"> <a >{{ data.name }}</a></nz-tag>
                         </ng-template>
                     </nz-descriptions-item>
                     <nz-descriptions-item [nzTitle]="null">
@@ -55,18 +51,10 @@
             </div>
           </div>
           <div nz-row [nzGutter]="3" *ngIf="film.type==2">
-            <!-- <h4 [ngStyle]="{'margin-top.px': 16 }">Danh sách tập phim</h4>
-            <div nz-col nzSpan="24" class="episode-area" [ngStyle]="{ 'margin-bottom.px': 16, 'margin-top.px': 16 }">
-                <nz-radio-group [(ngModel)]="current_episode">
-                    <ng-template ngFor let-data [ngForOf]="film.episodes">
-                        <label nz-radio-button nzValue="{{data.id}}" (click)="change_episode(data.id)">{{data.id}}</label>
-                    </ng-template>                                                                          
-                  </nz-radio-group>
-            </div> -->
           </div>
     </div>
     <div nz-col nzSpan="10" >
-        <div nz-row [nzGutter]="3">
+        <div nz-row [nzGutter]="3" *ngIf="film && is_logged">
             <span>
                 <p  *ngIf="!is_love" style="color: white;">Thêm vào yêu thích:
                     <i  id="favofrie" style="color: pink;" nz-icon nzType="plus" (click)="add_favorite()"></i>
@@ -96,9 +84,17 @@
                     <i class="rating1" *ngIf="temp_score==5"  nz-icon nzType="star" nzTheme='fill' style="color: yellow;" (click)="send_rating(5)" (mouseenter)="temp_score=5"  (mouseleave)="temp_score=score"></i>
                 </p>
             </span>
+            <span>
+                <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Chia sẻ</a></div>
+                <!-- <iframe [src]='sanitizer.bypassSecurityTrustResourceUrl(share_link)' width="76" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe> -->
+            </span>
+            <br>
+            <span >
+                <button style="margin-top: 10px;" nz-button nzType="primary" (click)="open_comment()">Bình luận</button>
+            </span>
         </div>
-        <nz-divider></nz-divider>
-        <span>
+        <nz-divider *ngIf="film.episodes.length>0"></nz-divider>
+        <span *ngIf="film.episodes.length>0">
             <h4  class="class-h4" [ngStyle]="{'margin-top.px': 16, 'color': 'white' }">Danh sách tập phim</h4>
             <div nz-col nzSpan="24" class="episode-area" [ngStyle]="{ 'margin-bottom.px': 16, 'margin-top.px': 16 }">
                 <nz-radio-group [(ngModel)]="current_episode">
@@ -112,7 +108,7 @@
     </div>
   </div>
 
-  <nz-comment *ngIf="film">
+  <!-- <nz-comment *ngIf="film">
     <nz-comment-content>
       <nz-form-item>
         <textarea style="color: white; background-color: rgb(20, 20, 20);" [(ngModel)]="comment" nz-input rows="4"></textarea>
@@ -153,4 +149,58 @@
 
     <ng-template #norult >
         <p style="color: white;">Không có bình luận nào</p>
-    </ng-template>
+    </ng-template> -->
+    <h2 style="color: white; margin: 5px; max-height: 400px;">Trailer</h2>
+    <!-- <div *ngIf="trailer && film && film.meta_data.trailer_url" id="plyrID2" style="max-height: 300px;" data-plyr-provider="youtube" data-plyr-embed-id="film.meta_data.trailer_url"></div>   -->
+    <iframe  *ngIf="trailer && film && film.meta_data.trailer_url" height="70%" width="97%" class="trailer" [src]="sanitizer.bypassSecurityTrustResourceUrl(film.meta_data.trailer_url)" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <nz-drawer 
+      [nzClosable]="true"
+      [nzVisible]="visible_comment"
+      nzPlacement="bottom"
+      nzTitle="Bình luận phim"
+      nzHeight="500px"
+      (nzOnClose)="close_comment()"
+    >
+    <nz-comment *ngIf="film">
+        <nz-comment-content>
+          <nz-form-item>
+            <textarea  [(ngModel)]="comment" nz-input rows="4"></textarea>
+          </nz-form-item>
+          <nz-form-item>
+            <button nz-button nzType="primary" [nzLoading]="submitting" [disabled]="!comment" (click)="handleSubmit()">
+              Thêm bình luận
+            </button>
+          </nz-form-item>
+        </nz-comment-content>
+      </nz-comment>
+      <h3 >Danh sách bình luận</h3>
+      
+      <nz-list [nzLoadMore]='loadMore' style=" padding-left: 50px; padding-right: 50px; border: 1px dotted white; border-radius: 3px;" *ngIf="slice_comments"  [nzDataSource]="slice_comments" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
+        <ng-template #item let-item>
+          <nz-comment [nzAuthor]="author" [nzDatetime]="return_data(item.created)">
+            <nz-avatar nz-comment-avatar nzText="{{item.username[0]}}" style="background-color:#87d068;" [nzSrc]="item.avatar"></nz-avatar>
+            <nz-comment-content>
+              <p>{{ item.text }}</p>
+            </nz-comment-content>
+            <nz-comment-action *ngIf="me && me.id == item.user_id" >
+                <p (click)="delete_comment(item.id)" style="color: red;"><i nz-icon nzType="delete" nzTheme="outline"></i>Xoá</p>
+                </nz-comment-action>
+          </nz-comment>
+          <nz-divider></nz-divider>
+          <ng-template #author >
+            <h3 >{{item.username}}</h3>
+          </ng-template>
+        </ng-template>
+      </nz-list>
+    
+        
+          <ng-template #loadMore >
+            <div class="loadmore" *ngIf="slice_comments && slice_comments.length >10">
+                <button nz-button *ngIf="!loadingMore" (click)="onLoadMore()">Hiển thị thêm</button>
+              </div>
+        </ng-template>
+    
+        <ng-template #norult >
+            <p>Không có bình luận nào</p>
+        </ng-template>
+    </nz-drawer>

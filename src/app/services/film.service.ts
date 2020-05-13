@@ -120,14 +120,37 @@ export class FilmService {
     return this.http.post(url, rating,{headers})
   }
 
-  view(film_id:number){
+  view(film_id:number, user_id:number){
     let url = environment.base_url_api + `/view/${film_id}`
+    if(user_id){
+      url = url + `?from_id=${user_id}`
+    }
     let access_token = localStorage.getItem('access_token')
     let headers = {
       'Authorization': 'Bearer '+ access_token
     }
 
     return this.http.post(url,{headers})
+  }
+
+  get_film_non_user(id:number){
+    let url = environment.base_url_api + `/films/${id}/non-user`
+    let access_token = localStorage.getItem('access_token')
+    let headers = {
+      'Authorization': 'Bearer '+ access_token
+    }
+
+    return this.http.get(url, {headers})
+  }
+
+  get_recommended_films(){
+    let url = environment.base_url_api + `/recommended-films`
+    let access_token = localStorage.getItem('access_token')
+    let headers = {
+      'Authorization': 'Bearer '+ access_token
+    }
+
+    return this.http.get(url, {headers})
   }
 
   

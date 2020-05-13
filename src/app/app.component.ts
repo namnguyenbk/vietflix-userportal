@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from './services/auth.service';
 import { UserService } from './services/user.service';
 import { NzNotificationService } from 'ng-zorro-antd';
+import { FilmService } from './services/film.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -36,8 +37,13 @@ export class AppComponent implements OnInit {
 
   is_view_info =  false;
 
+  inputValue: string;
+  filteredOptions: string[] = [];
+  options = ['Titanic', 'Game of thrones', 'David Copperfied'];
+
+
   is_logged : boolean
-  constructor(public router: Router, private fb: FormBuilder, private auth_service: AuthService,
+  constructor(public router: Router, private fb: FormBuilder, private auth_service: AuthService, private film_service : FilmService,
     private notification: NzNotificationService, private user_services: UserService){
     if(localStorage.getItem('access_token')){
       this.is_logged = true;
@@ -89,7 +95,9 @@ export class AppComponent implements OnInit {
     this.me = null;
     this.is_logged = false;
     localStorage.removeItem('access_token');
-    this.router.navigate['../'];
+    this.router.navigate['login'];
+    location.reload()
+
   }
 
   open_change_info(){
@@ -215,5 +223,19 @@ export class AppComponent implements OnInit {
 
   open_info(){
     this.is_view_info = true;
+  }
+
+  onChange(value: string): void {
+    this.filteredOptions = value? this.options.filter(option => option.toLowerCase().includes(value.toLowerCase())): [];
+  }
+
+  search(){
+    if(this.inputValue){
+      window.scroll(0,0);
+      this.router.navigateByUrl(`/loading`, { skipLocationChange: true }).then(() => {
+      this.router.navigate([`home`], {queryParams: {search: this.inputValue}});
+      this.inputValue = null;
+    });
+    }
   }
 }

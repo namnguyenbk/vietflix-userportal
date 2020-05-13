@@ -39,6 +39,9 @@ export class LoginComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private auth_service: AuthService, public router: Router,
     private notification: NzNotificationService, private user_services: UserService) {
+      this.user_services.get_me().subscribe(res=>{
+        this.router.navigate(['home'])
+      });
   }
 
   submitForm(): void {
@@ -65,6 +68,7 @@ export class LoginComponent implements OnInit {
           return;
         }else{
           this.router.navigate(['../'])
+          location.reload()
           localStorage.setItem('access_token', res.access_token)
         }
     },

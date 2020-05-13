@@ -19,6 +19,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { VerifyComponent } from './pages/verify/verify.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzCarouselModule } from 'ng-zorro-antd/carousel';
+import { LoadingComponent } from './pages/loading/loading.component';
 registerLocaleData(en);
 
 @NgModule({
@@ -29,7 +30,8 @@ registerLocaleData(en);
     LoginComponent,
     SignupComponent,
     HomeComponent,
-    VerifyComponent
+    VerifyComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
