@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  base_url_api: 'https://vietflix-api.herokuapp.com'
+  base_url_api: 'http://localhost:8080'
 };
 
 /*
