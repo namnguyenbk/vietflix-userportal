@@ -130,5 +130,18 @@ export class SignupComponent implements OnInit {
     );
   }
 
+  resend_email(){
+    this.isLoading_resend = true;
+    this.auth_service.reset_password(this.current_email).subscribe(
+      (res : any) =>{
+        this.isLoading_resend = false;
+    },
+
+      (error) => {
+        this.isLoading_resend = false;
+    }
+    );
+  }
+
 
 }
