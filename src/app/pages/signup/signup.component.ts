@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-signup',
@@ -25,8 +26,12 @@ export class SignupComponent implements OnInit {
   isLoading_resend = false;
   isLoading_checkToken = false;
   
-  constructor(private fb: FormBuilder, private auth_service: AuthService, public router: Router,
-    private notification: NzNotificationService) { }
+  constructor(private fb: FormBuilder, private auth_service: AuthService, public router: Router, private user_services: UserService,
+    private notification: NzNotificationService) { 
+      this.user_services.get_me().subscribe(res=>{
+        this.router.navigate(['home'])
+      });
+    }
 
   ngOnInit() {
 

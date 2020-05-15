@@ -85,7 +85,7 @@
                 </p>
             </span>
             <span>
-                <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Chia sẻ</a></div>
+                <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="small"><a target="_blank" [href]="sanitizer.bypassSecurityTrustResourceUrl(share_link)" class="fb-xfbml-parse-ignore">Chia sẻ</a></div>
                 <!-- <iframe [src]='sanitizer.bypassSecurityTrustResourceUrl(share_link)' width="76" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe> -->
             </span>
             <br>

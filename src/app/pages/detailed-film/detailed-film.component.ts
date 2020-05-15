@@ -231,7 +231,7 @@ export class DetailedFilmComponent implements OnInit {
   }
 
   get_share_link(film_id){
-    return `https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2F${this.router.url}%2Ffilm%2F${film_id}&layout=button&size=small&width=76&height=20&appId`
+    return `https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fvietflix-userportal.herokuapp.com%2Ffilm%2F${film_id}&amp;src=sdkpreparse`
   }
 
 }
