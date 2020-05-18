@@ -56,6 +56,13 @@ export class DetailedFilmComponent implements OnInit {
     'max-height': '600px'
   };
 
+  body_style = {
+    padding: '5px',
+    color: 'white',
+    'background-color': 'rgb(20,20,20)',
+    border: '1px'
+  }
+
 
   
   constructor(private route: ActivatedRoute, private film_service: FilmService, private comment_service: CommentService,
