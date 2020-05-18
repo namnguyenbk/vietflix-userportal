@@ -153,5 +153,15 @@ export class FilmService {
     return this.http.get(url, {headers})
   }
 
+  get_similar_films(film_id:number){
+    let url = environment.base_url_api + `/similar-films/${film_id}`
+    let access_token = localStorage.getItem('access_token')
+    let headers = {
+      'Authorization': 'Bearer '+ access_token
+    }
+
+    return this.http.get(url, {headers}) 
+  }
+
   
 }

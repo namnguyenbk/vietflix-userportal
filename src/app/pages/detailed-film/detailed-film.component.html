@@ -3,7 +3,7 @@
     <nz-spin nzSimple></nz-spin>
   </div>
           <div class="container">
-          <video id="plyrID" style="max-height: 500px;" controls playsinline>
+          <video id="plyrID" [ngStyle]="video_size"  controls playsinline>
              <source src="{{current_video_url}}" >
             </video>
             <h3 class="class-h4" *ngIf="film && film.type==2" style="color: white;">{{film.name}} - Tập {{current_episode}}</h3>
@@ -70,7 +70,7 @@
                 </p>
                     
             </span>
-            <span>
+            <span *ngIf="film">
                 <p style="color: white;">Đánh giá:
                     <i class="rating" *ngIf="temp_score==0"  nz-icon nzType="star" (click)="send_rating(1)"></i>
                     <i class="rating1" *ngIf="temp_score>0"  nz-icon nzType="star" nzTheme='fill' style="color: yellow;" (click)="send_rating(1)" (mouseenter)="temp_score=1"  (mouseleave)="temp_score=score"></i>
@@ -84,8 +84,8 @@
                     <i class="rating1" *ngIf="temp_score==5"  nz-icon nzType="star" nzTheme='fill' style="color: yellow;" (click)="send_rating(5)" (mouseenter)="temp_score=5"  (mouseleave)="temp_score=score"></i>
                 </p>
             </span>
-            <span>
-                <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="small"><a target="_blank" [href]="sanitizer.bypassSecurityTrustResourceUrl(share_link)" class="fb-xfbml-parse-ignore">Chia sẻ</a></div>
+            <span *ngIf="film">
+                <div class="fb-share-button" data-href="https://vietflix-userportal.herokuapp.com" data-layout="button" data-size="small"><a target="_blank" [href]="sanitizer.bypassSecurityTrustResourceUrl(share_link)" class="fb-xfbml-parse-ignore">Chia sẻ</a></div>
                 <!-- <iframe [src]='sanitizer.bypassSecurityTrustResourceUrl(share_link)' width="76" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe> -->
             </span>
             <br>
@@ -150,6 +150,27 @@
     <ng-template #norult >
         <p style="color: white;">Không có bình luận nào</p>
     </ng-template> -->
+    <h2 *ngIf="similarFilm.length > 0" style="color: white; margin-top: 20px;">Phim tương tự</h2>
+  <nz-list *ngIf="similarFilm.length > 0" [nzDataSource]="similarFilm" [nzRenderItem]="item" [nzGrid]="{ gutter: 8, xs: 24, sm: 12, md: 6, lg: 6, xl: 4 }">
+    <ng-template #item let-item>
+      <nz-list-item [nzContent]="nzContent" >
+        <ng-template #nzContent>
+          <nz-card nzHoverable style="width: 200px; height:280px ; border: 0px solid white;" [nzCover]="coverTemplate" [nzBodyStyle]="body_style">
+            <div nz-row>
+                <div nz-col nzSpan="22"> 
+                    <!-- <p style="color: white;" (click)="view_detail(item.id, item.video_url)">{{item.name}}</p> -->
+                </div>
+                
+              </div>     
+          </nz-card>
+        </ng-template>
+        <ng-template #coverTemplate>
+            <img (click)="view_detail(item.id, item.video_url)" alt="example" style="height: -webkit-fill-available; width: -webkit-fill-available;" src="{{item.image_url}}" />
+          </ng-template>
+      </nz-list-item>
+    </ng-template>
+    
+  </nz-list>
     <h2 style="color: white; margin: 5px; max-height: 400px;">Trailer</h2>
     <!-- <div *ngIf="trailer && film && film.meta_data.trailer_url" id="plyrID2" style="max-height: 300px;" data-plyr-provider="youtube" data-plyr-embed-id="film.meta_data.trailer_url"></div>   -->
     <iframe  *ngIf="trailer && film && film.meta_data.trailer_url" height="70%" width="97%" class="trailer" [src]="sanitizer.bypassSecurityTrustResourceUrl(film.meta_data.trailer_url)" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>

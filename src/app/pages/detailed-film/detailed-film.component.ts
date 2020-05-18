@@ -48,7 +48,13 @@ export class DetailedFilmComponent implements OnInit {
 
   trailer = true;
 
-  episode = 0
+  episode = 0;
+
+  similarFilm =[];
+
+  video_size = {
+    'max-height': '600px'
+  };
 
 
   
@@ -90,6 +96,19 @@ export class DetailedFilmComponent implements OnInit {
         this.initLoading = false;
       }, error=>{console.log('errrprprpr')});
 
+      this.user_service.get_me().subscribe((res:any)=>{
+        this.me = res;
+        this.temp_score = this.score;
+        this.film_service.view(this.film.id, this.me.id).subscribe(res=>{window.scroll(0,0);}, error=>{window.scroll(0,0);});    
+      }, error=>{
+        this.is_logged = false;
+        this.film_service.view(this.film.id, null).subscribe(res=>{window.scroll(0,0);}, error=>{window.scroll(0,0);}); 
+      });
+
+      this.film_service.get_similar_films(this.film.id).subscribe((res:any)=>{
+        this.similarFilm = res;
+      }); 
+
     }, error =>{
       this.film_service.get_film_non_user(this.film_id).subscribe((res:any)=>{
         this.film = res;
@@ -111,12 +130,24 @@ export class DetailedFilmComponent implements OnInit {
     this.player.on('play', event => {
       this.trailer = false;
       if(!this.me){
-        this.router.navigate(['/login'])
+        this.router.navigate(['/login']);
       }
     });
 
     this.player.on('pause', event => {
       this.trailer = true;
+    });
+
+    this.player.on('enterfullscreen', event =>{
+      this.video_size = {
+        'max-height': '100%'
+      }
+    });
+
+    this.player.on('exitfullscreen', event =>{
+      this.video_size = {
+        'max-height': '600px'
+      }
     });
 
           // this.player2 = new Plyr('#plyrID2', { 
@@ -131,18 +162,6 @@ export class DetailedFilmComponent implements OnInit {
       //     },
       //   ],
       // };
-    
-
-
-    this.user_service.get_me().subscribe((res:any)=>{
-      this.me = res;
-      this.temp_score = this.score;
-      this.film_service.view(this.film.id, this.me.id).subscribe(res=>{window.scroll(0,0);}, error=>{window.scroll(0,0);});    
-
-    }, error=>{
-      this.is_logged = false;
-      this.film_service.view(this.film.id, null).subscribe(res=>{window.scroll(0,0);}, error=>{window.scroll(0,0);});  
-    })
   }
 
   onLoadMore(): void {
@@ -232,6 +251,15 @@ export class DetailedFilmComponent implements OnInit {
 
   get_share_link(film_id){
     return `https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fvietflix-userportal.herokuapp.com%2Ffilm%2F${film_id}&amp;src=sdkpreparse`
+  }
+
+  view_detail(film_id, url:string){
+    localStorage.setItem('video_url', url);
+    localStorage.setItem('video_id', '1');
+
+    this.router.navigateByUrl(`/film/${film_id}/episodes/0`, { skipLocationChange: true }).then(() => {
+      this.router.navigate([`/film/${film_id}`]);
+    }); 
   }
 
 }
