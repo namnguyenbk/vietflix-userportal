@@ -198,14 +198,8 @@ export class DetailedFilmComponent implements OnInit {
   }
 
   add_favorite(){
-    let rating = {
-      user_id: this.me.id,
-      film_id: this.film.id,
-      type: 'favorite',
-      data: 5
-    }
     this.is_love = true;
-    this.film_service.send_rating(rating).subscribe(res=>{
+    this.film_service.add_wishlist(this.film_id).subscribe(res=>{
       // this.message.create('success', `Đã lưu ${this.film.name} vào yêu thích`);
       this.is_love = true;
     }, error=>{
@@ -224,12 +218,12 @@ export class DetailedFilmComponent implements OnInit {
     let rating = {
       user_id: this.me.id,
       film_id: this.film.id,
-      type: 'score',
+      name: 'rate',
       data: score
     }
     this.score = score;
     this.temp_score = score;
-    this.film_service.send_rating(rating).subscribe(res=>{
+    this.film_service.send_activity(rating).subscribe(res=>{
       // this.message.create('success', `Đã lưu ${this.film.name} vào yêu thích`);
     }, error=>{
       this.message.create('error', error.error.error_message);

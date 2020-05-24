@@ -62,8 +62,8 @@ nz-header {
   padding: 14px;
   background: rgb(20,20,20);
   height: 100%;
-  color: #fff;
-  overflow: scroll;
+  color: rgb(20,20,20);
+  overflow: auto;
 }
 
 .search-bar {

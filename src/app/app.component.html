@@ -11,10 +11,17 @@
         
         <div class="search-bar">
           <nz-input-group  nzSearch [nzAddOnAfter]="suffixIconSearch" class="search-inputs">
-            <input [(ngModel)]="inputValue" (ngModelChange)="onChange($event)"
-            [nzAutocomplete]="auto" style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: 0px solid rgb(20, 20, 20); border-bottom: 1px solid white;" type="text" nz-input placeholder="Nhập từ khoá tìm kiếm" />
+            <!-- <form > -->
+              <input [(ngModel)]="inputValue"  (keyup.enter)="search()" 
+              style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: 0px solid rgb(20, 20, 20); border-bottom: 1px solid white;" type="text" nz-input placeholder="Nhập từ khoá tìm kiếm" />
+              <ng-template #suffixIconSearch>
+               <button (click)="search()" nz-button nzSearch style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: rgb(20, 20, 20);" ><i nz-icon nzType="search"></i></button>
+             </ng-template>
+            <!-- </form> -->
+            <!-- <input [(ngModel)]="inputValue" (ngModelChange)="onChange($event)"
+            [nzAutocomplete]="auto" style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: 0px solid rgb(20, 20, 20); border-bottom: 1px solid white;" type="text" nz-input placeholder="Nhập từ khoá tìm kiếm" /> -->
           </nz-input-group>
-          <nz-autocomplete [nzDataSource]="filteredOptions" #auto></nz-autocomplete>
+          <!-- <nz-autocomplete [nzDataSource]="filteredOptions" #auto></nz-autocomplete> -->
 
           <div class="login-button">
             <a routerLink="login" *ngIf="!me">
@@ -31,6 +38,9 @@
 
           <nz-dropdown-menu #menu="nzDropdownMenu" >
             <ul nz-menu nzSelectable>
+              <li nz-menu-item (click)="open_my_list()">
+                Danh sách yêu thích
+              </li>
               <li nz-menu-item (click)="open_info()">
                 Thông tin tài khoản
               </li>
@@ -62,14 +72,11 @@
           </div>
         </div>
 
-        <ng-template #suffixIconSearch>
-          <button (click)="search()" nz-button nzSearch style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: rgb(20, 20, 20);" ><i nz-icon nzType="search"></i></button>
-        </ng-template>
       </div>
     </nz-header>
 
     <nz-content>
-      <div class="inner-content">
+      <div #app_content class="inner-content">
         <router-outlet (activate)='onActivate($event)'></router-outlet>
       </div>
     </nz-content>

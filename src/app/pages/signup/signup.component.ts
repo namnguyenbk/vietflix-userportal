@@ -119,7 +119,7 @@ export class SignupComponent implements OnInit {
     }
 
     this.isLoading_checkToken = true;
-    this.auth_service.check_reset_password(this.current_email, token, '').subscribe(
+    this.auth_service.check_verification_code(this.current_email, token, '').subscribe(
       (res : any) =>{
         this.isLoading_checkToken = false;
         this.isTokenPass = false;

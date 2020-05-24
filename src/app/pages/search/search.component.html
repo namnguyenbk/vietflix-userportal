@@ -1,0 +1,25 @@
+<h1 *ngIf="search_key" style="color: white;">Kết quả tìm kiếm cho: {{search_key}}</h1>
+<div class="example" *ngIf="is_searching && search_key">
+  <nz-spin nzSimple></nz-spin>
+</div>
+<h2 *ngIf="is_searched" style="text-align: center; color: white; margin-top: 100px; margin-bottom: 200px;"> Không có kết quả tìm kiếm nào được tìm thấy</h2>
+<nz-list *ngIf="result_search.length > 0" [nzDataSource]="result_search" [nzRenderItem]="item" [nzGrid]="{ gutter: 8, xs: 24, sm: 12, md: 6, lg: 6, xl: 4 }">
+  <ng-template #item let-item>
+    <nz-list-item [nzContent]="nzContent" >
+      <ng-template #nzContent>
+        <nz-card nzHoverable style="width: 200px; height:280px ; border: 0px solid white;" [nzCover]="coverTemplate" [nzBodyStyle]="body_style">
+          <div nz-row>
+              <div nz-col nzSpan="22"> 
+                  <!-- <p style="color: white;" (click)="view_detail(item.id, item.video_url)">{{item.name}}</p> -->
+              </div>
+              
+            </div>     
+        </nz-card>
+      </ng-template>
+      <ng-template #coverTemplate>
+          <img (click)="view_detail(item.id, item.video_url)" alt="example" style="height: -webkit-fill-available; width: -webkit-fill-available;" src="{{item.image_url}}" />
+        </ng-template>
+    </nz-list-item>
+  </ng-template>
+  
+</nz-list>

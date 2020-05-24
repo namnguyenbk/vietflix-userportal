@@ -40,12 +40,12 @@ export class AuthService {
   }
 
   reset_password(email: string){
-    let url = environment.base_url_api + "/reset_password"
+    let url = environment.base_url_api + "/verification_code"
     return this.http.post(url, {email})
   }
 
-  check_reset_password(email:string, token: string, new_email:string){
-    let url = environment.base_url_api + "/check_reset_password"
+  check_verification_code(email:string, token: string, new_email:string){
+    let url = environment.base_url_api + "/verification_code"
     return this.http.post(url, {email:email, token: token, new_email: new_email})
   }
 

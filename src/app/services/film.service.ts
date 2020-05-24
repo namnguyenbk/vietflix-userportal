@@ -80,6 +80,16 @@ export class FilmService {
     return this.http.delete(url, {headers})
   }
 
+  add_wishlist(film_id:number){
+    let url = environment.base_url_api + `/wish-list/${film_id}`
+    let access_token = localStorage.getItem('access_token')
+    let headers = {
+      'Authorization': 'Bearer '+ access_token
+    }
+
+    return this.http.post(url,{}, {headers})
+  }
+
   mostLike(){
     let url = environment.base_url_api + `/most-liked-film`
     let access_token = localStorage.getItem('access_token')
@@ -110,7 +120,7 @@ export class FilmService {
     return this.http.get(url, {headers})
   }
 
-  send_rating(rating:any){
+  send_activity(rating:any){
     let url = environment.base_url_api + `/ratings`
     let access_token = localStorage.getItem('access_token')
     let headers = {

@@ -53,7 +53,7 @@ export class VerifyComponent implements OnInit {
     }
 
     this.isLoading_checkToken = true;
-    this.auth_service.check_reset_password(localStorage.getItem('email_verify'), token, '').subscribe(
+    this.auth_service.check_verification_code(localStorage.getItem('email_verify'), token, '').subscribe(
       (res : any) =>{
         this.isLoading_checkToken = false;
         this.isTokenPass = false;

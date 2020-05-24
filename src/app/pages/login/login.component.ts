@@ -39,9 +39,13 @@ export class LoginComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private auth_service: AuthService, public router: Router,
     private notification: NzNotificationService, private user_services: UserService) {
-      this.user_services.get_me().subscribe(res=>{
+      if(localStorage.getItem('access_token')){
         this.router.navigate(['home'])
-      });
+      }
+      this.user_services.get_me().subscribe(res=>{
+      },error =>{
+        this.router.navigate(['login'])
+      } );
   }
 
   submitForm(): void {
@@ -67,9 +71,9 @@ export class LoginComponent implements OnInit {
           this.has_role = true;
           return;
         }else{
-          this.router.navigate(['../'])
-          location.reload()
           localStorage.setItem('access_token', res.access_token)
+          this.router.navigate(['home'])
+          location.reload()
         }
     },
 
@@ -148,7 +152,7 @@ export class LoginComponent implements OnInit {
     }
 
     this.isLoading_checkToken = true;
-    this.auth_service.check_reset_password(this.email_reset, token, '').subscribe(
+    this.auth_service.check_verification_code(this.email_reset, token, '').subscribe(
       (res : any) =>{
         this.isLoading_checkToken = false;
         this.step = 2;

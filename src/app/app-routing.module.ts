@@ -7,6 +7,8 @@ import { SignupComponent } from './pages/signup/signup.component';
 import { VerifyComponent } from './pages/verify/verify.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoadingComponent } from './pages/loading/loading.component';
+import { SearchComponent } from './pages/search/search.component';
+import { WishListComponent } from './pages/wish-list/wish-list.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/home' },
@@ -17,6 +19,8 @@ const routes: Routes = [
   { path: 'signup', pathMatch: 'full', component: SignupComponent },
   { path: 'verify', pathMatch: 'full', component: VerifyComponent },
   { path: 'home', pathMatch: 'full', component: HomeComponent },
+  { path: 'search', pathMatch: 'full', component: SearchComponent },
+  { path: 'my-list', pathMatch: 'full', component: WishListComponent },
 ];
 
 @NgModule({

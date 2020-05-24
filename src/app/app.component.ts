@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import * as Plyr from 'plyr';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -12,6 +12,9 @@ import { FilmService } from './services/film.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+
+  @ViewChild('app_content', { static: false }) myDiv: ElementRef;
+
   public player;
   me:any;
 
@@ -39,7 +42,7 @@ export class AppComponent implements OnInit {
 
   inputValue: string;
   filteredOptions: string[] = [];
-  options = ['Titanic', 'Game of thrones', 'David Copperfied'];
+  options = ['Titanic', 'Game of thrones', 'David Copperfield', 'Harry Potter'];
 
 
   is_logged : boolean
@@ -78,6 +81,7 @@ export class AppComponent implements OnInit {
   title = 'vietflix-userportal';
 
   onActivate(event){
+    this.myDiv.nativeElement.scrollTo( 0, 0 );
     if(event.constructor.name != "LoginComponent"){
       this.user_services.get_me().subscribe(res=>{
         this.me =res;
@@ -173,7 +177,7 @@ export class AppComponent implements OnInit {
     }
 
     this.isLoadingToken = true;
-    this.auth_service.check_reset_password(this.me.email, token, this.new_email).subscribe(
+    this.auth_service.check_verification_code(this.me.email, token, this.new_email).subscribe(
       (res : any) =>{
         this.isLoadingToken = false;
         this.isTokenPass = false;
@@ -233,9 +237,13 @@ export class AppComponent implements OnInit {
     if(this.inputValue){
       window.scroll(0,0);
       this.router.navigateByUrl(`/loading`, { skipLocationChange: true }).then(() => {
-      this.router.navigate([`home`], {queryParams: {search: this.inputValue}});
+      this.router.navigate([`search`], {queryParams: {key: this.inputValue}});
       this.inputValue = null;
     });
     }
+  }
+
+  open_my_list(){
+    this.router.navigate(['my-list'])
   }
 }
