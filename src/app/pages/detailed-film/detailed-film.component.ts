@@ -138,6 +138,9 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
     }
 
   ngOnDestroy(): void {
+    if(this.player){
+      
+
     let remaining_watching_time = this.player.currentTime;
     console.log('Remaining watching time: ', remaining_watching_time, remaining_watching_time > 120);
 
@@ -174,6 +177,7 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
 
     }
   }
+  }
 
   ngOnInit() {
     window.scroll(0,0);
@@ -192,6 +196,7 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
         let start_time = this.start_time.toFixed(2)
         this.player.currentTime = this.start_time;
         this.start_time = 0;
+        this.player.play()
       }
 
     });
@@ -270,7 +275,7 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
     });
   }
 
-  send_activity(score:number){
+  send_rating(score:number){
     let activity = {
       user_id: this.me.id,
       film_id: this.film.id,
