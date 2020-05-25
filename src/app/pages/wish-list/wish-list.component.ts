@@ -15,6 +15,13 @@ export class WishListComponent implements OnInit {
 
   recommended = [];
 
+  body_style = {
+    padding: '5px',
+    color: 'white',
+    'background-color': 'rgb(20,20,20)',
+    border: '1px'
+  }
+
   constructor(private film_service: FilmService, private router: Router, private route: ActivatedRoute) { 
   }
 

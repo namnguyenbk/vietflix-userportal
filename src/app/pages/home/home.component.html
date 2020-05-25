@@ -67,7 +67,7 @@
   <div class="example" *ngIf="is_getting_recommended_film">
     <nz-spin nzSimple></nz-spin>
   </div>
-  <h3 *ngIf="recommended.length > 0" style="color: white;">Phim gợi ý cho bạn</h3>
+  <h3 *ngIf="recommended.length > 0" style="color: white; margin-top: 20px;">Phim gợi ý cho bạn</h3>
   <nz-list *ngIf="recommended.length > 0" [nzDataSource]="recommended" [nzRenderItem]="item" [nzGrid]="{ gutter: 8, xs: 24, sm: 12, md: 6, lg: 6, xl: 4 }">
     <ng-template #item let-item>
       <nz-list-item [nzContent]="nzContent" >

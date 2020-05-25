@@ -152,7 +152,8 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
         data: remaining_watching_time,
         meta_data: JSON.stringify({
           episode: this.current_episode,
-          duration: this.player.duration
+          duration: this.player.duration,
+          video_url: this.current_video_url
         })
       }
 
@@ -316,7 +317,7 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
     localStorage.setItem('video_url', url);
     localStorage.setItem('video_id', '1');
 
-    this.router.navigateByUrl(`/film/${film_id}/episodes/0`, { skipLocationChange: true }).then(() => {
+    this.router.navigateByUrl(`/film/${film_id}/episodes/1`, { skipLocationChange: true }).then(() => {
       this.router.navigate([`/film/${film_id}`]);
     }); 
   }

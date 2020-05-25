@@ -16,6 +16,13 @@ export class SearchComponent implements OnInit {
 
   is_searched = false;
 
+  body_style = {
+    padding: '5px',
+    color: 'white',
+    'background-color': 'rgb(20,20,20)',
+    border: '1px'
+  }
+
   constructor(private film_service: FilmService, private router: Router, private route: ActivatedRoute) { 
     const search_key: string = this.route.snapshot.queryParamMap.get('key');
     if(search_key){

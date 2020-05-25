@@ -1,12 +1,12 @@
 
-<div class="example" *ngIf="!film">
-    <nz-spin nzSimple></nz-spin>
-  </div>
           <div class="container">
           <video id="plyrID" [ngStyle]="video_size"  controls playsinline>
              <source src="{{current_video_url}}" >
             </video>
             <h3 class="class-h4" *ngIf="film && film.type==2" style="color: white;">{{film.name}} - Tập {{current_episode}}</h3>
+        </div>
+        <div class="example" *ngIf="!film">
+          <nz-spin nzSimple></nz-spin>
         </div>
 <div nz-row [nzGutter]="6" *ngIf="film">
     <div nz-col nzSpan="14">

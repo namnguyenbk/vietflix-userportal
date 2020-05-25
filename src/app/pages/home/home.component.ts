@@ -116,7 +116,7 @@ export class HomeComponent implements OnInit {
 
   continue_watching(id:number, video_url: string, time: number, meta_data:any){
     localStorage.setItem('video_url', video_url);
-    localStorage.setItem('video_id', '1');
+    localStorage.setItem('video_id', meta_data.episode );
     console.log({queryParams: {time: time, episode: meta_data.episode, continue_watching: true}})
     this.router.navigate([`film/${id}`],{queryParams: {time: time, episode: meta_data.episode, continue_watching: true}} )
   }
