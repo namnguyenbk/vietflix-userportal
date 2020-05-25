@@ -36,6 +36,34 @@
     
   </nz-list>
 
+  <!-- <div class="example" *ngIf="is_getting_watching">
+    <nz-spin nzSimple></nz-spin>
+  </div> -->
+  <h3 *ngIf="watching.length > 0" style="color: white;">Xem tiếp phim đang xem</h3>
+  <nz-list *ngIf="watching.length > 0" [nzDataSource]="watching" [nzRenderItem]="item" [nzGrid]="{ gutter: 8, xs: 24, sm: 12, md: 6, lg: 6, xl: 4 }">
+    <ng-template #item let-item>
+      <nz-list-item [nzContent]="nzContent" >
+        <ng-template #nzContent>
+          <nz-card  nzHoverable style="width: 200px; height:280px ; border: 0px solid white; margin-bottom: 15px;" [nzCover]="coverTemplate" [nzBodyStyle]="body_style">
+             <!-- <div style="width: 170px; margin-bottom: 60px;">
+              <nz-progress [nzPercent]="item.time * 100 / item.meta_data.duration" nzSize="small" [nzShowInfo]="false"></nz-progress>
+            </div>    -->
+          </nz-card>
+
+        </ng-template>
+        <ng-template #coverTemplate>
+            <img (click)="continue_watching(item.film.id, item.film.video_url, item.time, item.meta_data)" alt="example" style="height: -webkit-fill-available; width: -webkit-fill-available;" src="{{item.film.image_url}}" />
+            <div style="margin-bottom: 60px;">
+              <nz-progress nzStatus="exception" [nzPercent]="item.time * 100 / item.meta_data.duration" nzSize="small" [nzShowInfo]="false"></nz-progress>
+            </div>   
+          </ng-template>
+
+      </nz-list-item>
+    </ng-template>
+    
+  </nz-list>
+
+
   <div class="example" *ngIf="is_getting_recommended_film">
     <nz-spin nzSimple></nz-spin>
   </div>
@@ -61,7 +89,7 @@
     
   </nz-list>
 
-
+<br>
 <h3 *ngIf="newest.length > 0" style="color: white;">Phim mới</h3>
 <nz-list *ngIf="newest.length > 0" [nzDataSource]="newest" [nzRenderItem]="item" [nzGrid]="{ gutter: 8, xs: 24, sm: 12, md: 6, lg: 6, xl: 4 }">
   <ng-template #item let-item>

@@ -22,6 +22,7 @@ import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { LoadingComponent } from './pages/loading/loading.component';
 import { SearchComponent } from './pages/search/search.component';
 import { WishListComponent } from './pages/wish-list/wish-list.component';
+import { ViewFilmComponent } from './pages/view-film/view-film.component';
 registerLocaleData(en);
 
 @NgModule({
@@ -35,7 +36,8 @@ registerLocaleData(en);
     VerifyComponent,
     LoadingComponent,
     SearchComponent,
-    WishListComponent
+    WishListComponent,
+    ViewFilmComponent
   ],
   imports: [
     BrowserModule,

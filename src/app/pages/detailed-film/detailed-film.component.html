@@ -198,7 +198,7 @@
       
       <nz-list [nzLoadMore]='loadMore' style=" padding-left: 50px; padding-right: 50px; border: 1px dotted white; border-radius: 3px;" *ngIf="slice_comments"  [nzDataSource]="slice_comments" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
         <ng-template #item let-item>
-          <nz-comment [nzAuthor]="author" [nzDatetime]="return_data(item.created)">
+          <nz-comment [nzAuthor]="author" [nzDatetime]="item.date_in_word">
             <nz-avatar nz-comment-avatar nzText="{{item.username[0]}}" style="background-color:#87d068;" [nzSrc]="item.avatar"></nz-avatar>
             <nz-comment-content>
               <p>{{ item.text }}</p>

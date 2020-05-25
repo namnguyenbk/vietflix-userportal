@@ -12,7 +12,7 @@ import { distanceInWords } from 'date-fns';
   templateUrl: './detailed-film.component.html',
   styleUrls: ['./detailed-film.component.css']
 })
-export class DetailedFilmComponent implements OnInit {
+export class DetailedFilmComponent implements OnInit, OnDestroy {
 
   initLoading = true; // bug
   loadingMore = false;
@@ -63,11 +63,20 @@ export class DetailedFilmComponent implements OnInit {
     border: '1px'
   }
 
+  start_time = 0;
+
 
   
   constructor(private route: ActivatedRoute, private film_service: FilmService, private comment_service: CommentService,
     private modalService: NzModalService, private user_service: UserService, private router: Router,
     public sanitizer : DomSanitizer, private message: NzMessageService) { 
+      let is_continue_watching = this.route.snapshot.queryParamMap.get("continue_watching")
+      if(is_continue_watching){
+        console.log('is', is_continue_watching);
+        this.current_episode = this.route.snapshot.queryParamMap.get("episode")
+        this.start_time = parseInt(this.route.snapshot.queryParamMap.get("time"))
+      }
+
       this.film_id = parseInt(this.route.snapshot.paramMap.get("film_id"));
       this.episode = parseInt(this.route.snapshot.queryParamMap.get("episodes"));
     this.film_service.get_film(this.film_id).subscribe((res:any)=>{
@@ -128,17 +137,47 @@ export class DetailedFilmComponent implements OnInit {
       
     }
 
+  ngOnDestroy(): void {
+    let remaining_watching_time = this.player.currentTime;
+    console.log('Remaining watching time: ', remaining_watching_time, remaining_watching_time > 120);
+
+    if(parseInt(remaining_watching_time) > 0){
+      let activity = {
+        user_id: this.me.id,
+        film_id: this.film.id,
+        name: 'watching',
+        data: remaining_watching_time,
+        meta_data: JSON.stringify({
+          episode: this.current_episode,
+          duration: this.player.duration
+        })
+      }
+      this.film_service.remaining_watching_time(activity).subscribe(res=>{
+      }, error=>{
+        this.message.create('error', error.error.error_message);
+      });    
+    }
+  }
+
   ngOnInit() {
     window.scroll(0,0);
     this.player = new Plyr('#plyrID', { 
       captions: { active: true }
     });
 
+
     this.player.on('play', event => {
       this.trailer = false;
       if(!this.me){
         this.router.navigate(['/login']);
       }
+
+      if(this.start_time > 0){
+        let start_time = this.start_time.toFixed(2)
+        this.player.currentTime = this.start_time;
+        this.start_time = 0;
+      }
+
     });
 
     this.player.on('pause', event => {
@@ -191,6 +230,7 @@ export class DetailedFilmComponent implements OnInit {
   handleSubmit(){
     this.comment_service.add_comment(this.comment, this.film.id).subscribe((res:any)=>{
       res.username = this.me.name
+      res.date_in_word = '< 1 phút'
       this.list_comments.push(res);
       this.comment = null
       this.slice_comments = this.list_comments.slice(0,10)
@@ -214,8 +254,8 @@ export class DetailedFilmComponent implements OnInit {
     });
   }
 
-  send_rating(score:number){
-    let rating = {
+  send_activity(score:number){
+    let activity = {
       user_id: this.me.id,
       film_id: this.film.id,
       name: 'rate',
@@ -223,16 +263,13 @@ export class DetailedFilmComponent implements OnInit {
     }
     this.score = score;
     this.temp_score = score;
-    this.film_service.send_activity(rating).subscribe(res=>{
+    this.film_service.send_activity(activity).subscribe(res=>{
       // this.message.create('success', `Đã lưu ${this.film.name} vào yêu thích`);
     }, error=>{
       this.message.create('error', error.error.error_message);
     });    
   }
 
-  return_data(datetime){
-    return distanceInWords(datetime, new Date())
-  }
 
   delete_comment(comment_id:number){
     this.list_comments = this.list_comments.filter(function(value, index, arr){ return value.id != comment_id;});

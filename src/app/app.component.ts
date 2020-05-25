@@ -246,4 +246,10 @@ export class AppComponent implements OnInit {
   open_my_list(){
     this.router.navigate(['my-list'])
   }
+
+  reload_home(){
+    this.router.navigateByUrl(`/loading`, { skipLocationChange: true }).then(() => {
+      this.router.navigate([`home`]);
+    });
+  }
 }

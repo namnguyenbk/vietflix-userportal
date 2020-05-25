@@ -110,6 +110,16 @@ export class FilmService {
     return this.http.get(url, {headers})
   }
 
+  watchings(){
+    let url = environment.base_url_api + `/watching`
+    let access_token = localStorage.getItem('access_token')
+    let headers = {
+      'Authorization': 'Bearer '+ access_token
+    }
+
+    return this.http.get(url, {headers})
+  }
+
   newest(){
     let url = environment.base_url_api + `/newest-film`
     let access_token = localStorage.getItem('access_token')
@@ -120,14 +130,24 @@ export class FilmService {
     return this.http.get(url, {headers})
   }
 
-  send_activity(rating:any){
+  send_activity(activity:any){
     let url = environment.base_url_api + `/ratings`
     let access_token = localStorage.getItem('access_token')
     let headers = {
       'Authorization': 'Bearer '+ access_token
     }
 
-    return this.http.post(url, rating,{headers})
+    return this.http.post(url, activity,{headers})
+  }
+
+  remaining_watching_time(activity){
+    let url = environment.base_url_api + `/watching`
+    let access_token = localStorage.getItem('access_token')
+    let headers = {
+      'Authorization': 'Bearer '+ access_token
+    }
+
+    return this.http.post(url, activity,{headers})
   }
 
   view(film_id:number, user_id:number){

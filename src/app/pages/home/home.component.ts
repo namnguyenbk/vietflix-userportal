@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   mostView = [];
   newest = [];
   recommended = [];
+  watching = []
 
 
   is_getting_wishlist = false;
@@ -36,6 +37,14 @@ export class HomeComponent implements OnInit {
     this.is_getting_wishlist = true;
     this.film_service.wishlist().subscribe((res:any)=>{
       this.wishlist = res;
+      this.is_getting_wishlist = false;
+    }, error =>{
+      this.is_getting_wishlist = false;
+    });
+
+    this.is_getting_wishlist = true;
+    this.film_service.watchings().subscribe((res:any)=>{
+      this.watching = res;
       this.is_getting_wishlist = false;
     }, error =>{
       this.is_getting_wishlist = false;
@@ -79,6 +88,13 @@ export class HomeComponent implements OnInit {
     localStorage.setItem('video_url', url);
     localStorage.setItem('video_id', '1');
     this.router.navigate([`film/${film_id}`])
+  }
+
+  continue_watching(id:number, video_url: string, time: number, meta_data:any){
+    localStorage.setItem('video_url', video_url);
+    localStorage.setItem('video_id', '1');
+    console.log({queryParams: {time: time, episode: meta_data.episode, continue_watching: true}})
+    this.router.navigate([`film/${id}`],{queryParams: {time: time, episode: meta_data.episode, continue_watching: true}} )
   }
 
 }
