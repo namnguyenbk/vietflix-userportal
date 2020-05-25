@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   check_verification_code(email:string, token: string, new_email:string){
-    let url = environment.base_url_api + "/verification_code"
+    let url = environment.base_url_api + "/check_verification_code"
     return this.http.post(url, {email:email, token: token, new_email: new_email})
   }
 
