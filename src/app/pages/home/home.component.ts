@@ -42,12 +42,7 @@ export class HomeComponent implements OnInit {
     this.film_service.wishlist().subscribe((res:any)=>{
       this.wishlist = res;
       this.is_getting_wishlist = false;
-    }, error =>{
-      this.is_getting_wishlist = false;
-    });
 
-    // if (!localStorage.getItem(`setting_continue`)){
-    //   console.log('no', localStorage.getItem(`setting_continue`),)
       this.is_getting_wishlist = true;
       this.film_service.watchings().subscribe((res:any)=>{
       this.watching = res;
@@ -55,26 +50,12 @@ export class HomeComponent implements OnInit {
         }, error =>{
         this.is_getting_wishlist = false;
       });
-    // }else{
-    //   if(localStorage.getItem(`setting_continue`) === 'true'){
-        
-    //   }
-
-    // }
-
-    // setTimeout(function(){
-    // }, 5000);
-    // console.log('yes', localStorage.getItem(`setting_continue`))
-    //   this.is_getting_wishlist = true;
-    //   this.film_service.watchings().subscribe((res:any)=>{
-    //   this.watching = res;
-    //   this.is_getting_wishlist = false;
-    //     }, error =>{
-    //     this.is_getting_wishlist = false;
-    //   });
 
     this.film_service.get_recommended_films().subscribe((res:any)=>{
             this.recommended = res;
+    });
+    }, error =>{
+      this.is_getting_wishlist = false;
     });
 
     this.film_service.newest().subscribe((res:any)=>{
@@ -87,18 +68,7 @@ export class HomeComponent implements OnInit {
         });
       });
     });
-    // this.film_service.mostLike().subscribe((res:any)=>{
-    //   this.mostLike = res;
-    //   this.film_service.mostView().subscribe((res:any)=>{
-    //     this.mostView = res;
-    //     this.film_service.newest().subscribe((res:any)=>{
-    //       this.newest = res;
-    //       this.film_service.get_recommended_films().subscribe((res:any)=>{
-    //         this.recommended = res
-    //       })
-    //     });
-    //   });
-    // });
+
     
   }
 
@@ -109,8 +79,6 @@ export class HomeComponent implements OnInit {
   }
 
   view_detail(film_id, url:string){
-    localStorage.setItem('video_url', url);
-    localStorage.setItem('video_id', '1');
     this.router.navigate([`film/${film_id}`])
   }
 
@@ -118,7 +86,7 @@ export class HomeComponent implements OnInit {
     localStorage.setItem('video_url', video_url);
     localStorage.setItem('video_id', meta_data.episode );
     console.log({queryParams: {time: time, episode: meta_data.episode, continue_watching: true}})
-    this.router.navigate([`film/${id}`],{queryParams: {time: time, episode: meta_data.episode, continue_watching: true}} )
+    this.router.navigate([`film/${id}/episodes/${meta_data.episode}`],{queryParams: {time: time, continue_watching: true}} )
   }
 
 }
