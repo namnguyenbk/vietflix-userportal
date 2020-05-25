@@ -42,39 +42,22 @@ export class HomeComponent implements OnInit {
     this.film_service.wishlist().subscribe((res:any)=>{
       this.wishlist = res;
       this.is_getting_wishlist = false;
-    }, error =>{
-      this.is_getting_wishlist = false;
-    });
 
-    // if (!localStorage.getItem(`setting_continue`)){
-    //   console.log('no', localStorage.getItem(`setting_continue`),)
       this.is_getting_wishlist = true;
       this.film_service.watchings().subscribe((res:any)=>{
       this.watching = res;
       this.is_getting_wishlist = false;
+
+      this.film_service.get_recommended_films().subscribe((res:any)=>{
+        this.recommended = res;
+});
         }, error =>{
         this.is_getting_wishlist = false;
       });
-    // }else{
-    //   if(localStorage.getItem(`setting_continue`) === 'true'){
-        
-    //   }
 
-    // }
 
-    // setTimeout(function(){
-    // }, 5000);
-    // console.log('yes', localStorage.getItem(`setting_continue`))
-    //   this.is_getting_wishlist = true;
-    //   this.film_service.watchings().subscribe((res:any)=>{
-    //   this.watching = res;
-    //   this.is_getting_wishlist = false;
-    //     }, error =>{
-    //     this.is_getting_wishlist = false;
-    //   });
-
-    this.film_service.get_recommended_films().subscribe((res:any)=>{
-            this.recommended = res;
+    }, error =>{
+      this.is_getting_wishlist = false;
     });
 
     this.film_service.newest().subscribe((res:any)=>{
@@ -87,18 +70,6 @@ export class HomeComponent implements OnInit {
         });
       });
     });
-    // this.film_service.mostLike().subscribe((res:any)=>{
-    //   this.mostLike = res;
-    //   this.film_service.mostView().subscribe((res:any)=>{
-    //     this.mostView = res;
-    //     this.film_service.newest().subscribe((res:any)=>{
-    //       this.newest = res;
-    //       this.film_service.get_recommended_films().subscribe((res:any)=>{
-    //         this.recommended = res
-    //       })
-    //     });
-    //   });
-    // });
     
   }
 

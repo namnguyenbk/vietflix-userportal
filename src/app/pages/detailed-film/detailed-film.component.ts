@@ -153,9 +153,11 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
         meta_data: JSON.stringify({
           episode: this.current_episode,
           duration: this.player.duration,
-          video_url: this.current_video_url
+          video_url: localStorage.getItem('video_url')
         })
       }
+
+      // alert(localStorage.getItem('video_url') )
 
       localStorage.setItem(`setting_continue`, 'true')
 
@@ -189,7 +191,7 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
 
     this.player.on('play', event => {
       this.trailer = false;
-      if(!this.me){
+      if(!localStorage.getItem('access_token')){
         this.router.navigate(['/login']);
       }
 
