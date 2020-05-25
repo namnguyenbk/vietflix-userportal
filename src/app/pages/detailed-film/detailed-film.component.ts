@@ -152,10 +152,26 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
           duration: this.player.duration
         })
       }
+
+      localStorage.setItem(`setting_continue`, 'true')
+
+      // async function send_activity(){
+      //   await this.film_service.remaining_watching_time(activity).toPromise().then(
+      //     (res: any)=>{
+      //       console.log(1)
+      //     }, error => {this.message.create('error', error.error.error_message);}
+      //   )
+      // }
+
+      // send_activity();
+      // console.log('fejhje')
+
       this.film_service.remaining_watching_time(activity).subscribe(res=>{
+        localStorage.setItem(`setting_continue`, 'false');
       }, error=>{
         this.message.create('error', error.error.error_message);
-      });    
+      });  
+
     }
   }
 

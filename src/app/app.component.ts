@@ -249,7 +249,7 @@ export class AppComponent implements OnInit {
 
   reload_home(){
     this.router.navigateByUrl(`/loading`, { skipLocationChange: true }).then(() => {
-      this.router.navigate([`home`]);
+      this.router.navigate([`home`], {queryParams: {type: 'reload'}});
     });
   }
 }

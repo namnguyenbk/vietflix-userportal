@@ -31,6 +31,10 @@ export class HomeComponent implements OnInit {
   is_getting_new = false;
 
   constructor(private film_service: FilmService, private router: Router, private route: ActivatedRoute) { 
+    let type_load = this.route.snapshot.queryParamMap.get("type")
+    if(type_load =='reload'){
+      window.location.href = "/home"
+    }
   }
 
   ngOnInit() {
@@ -42,13 +46,32 @@ export class HomeComponent implements OnInit {
       this.is_getting_wishlist = false;
     });
 
-    this.is_getting_wishlist = true;
-    this.film_service.watchings().subscribe((res:any)=>{
+    // if (!localStorage.getItem(`setting_continue`)){
+    //   console.log('no', localStorage.getItem(`setting_continue`),)
+      this.is_getting_wishlist = true;
+      this.film_service.watchings().subscribe((res:any)=>{
       this.watching = res;
       this.is_getting_wishlist = false;
-    }, error =>{
-      this.is_getting_wishlist = false;
-    });
+        }, error =>{
+        this.is_getting_wishlist = false;
+      });
+    // }else{
+    //   if(localStorage.getItem(`setting_continue`) === 'true'){
+        
+    //   }
+
+    // }
+
+    // setTimeout(function(){
+    // }, 5000);
+    // console.log('yes', localStorage.getItem(`setting_continue`))
+    //   this.is_getting_wishlist = true;
+    //   this.film_service.watchings().subscribe((res:any)=>{
+    //   this.watching = res;
+    //   this.is_getting_wishlist = false;
+    //     }, error =>{
+    //     this.is_getting_wishlist = false;
+    //   });
 
     this.film_service.get_recommended_films().subscribe((res:any)=>{
             this.recommended = res;
