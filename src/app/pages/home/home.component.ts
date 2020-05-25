@@ -83,6 +83,7 @@ export class HomeComponent implements OnInit {
         this.mostLike = res;
         this.film_service.mostView().subscribe((res:any)=>{
           this.mostView = res;
+          this.film_service.watchings().subscribe((res:any)=>{this.watching = res;}, error =>{});
         });
       });
     });
