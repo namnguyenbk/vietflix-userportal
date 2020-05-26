@@ -150,7 +150,7 @@
     <ng-template #norult >
         <p style="color: white;">Không có bình luận nào</p>
     </ng-template> -->
-    <h2 *ngIf="similarFilm.length > 0" style="color: white; margin-top: 20px;">Phim tương tự</h2>
+    <h2 *ngIf="similarFilm.length > 0" style="color: white; margin-top: 20px;">Người dùng khác cũng xem</h2>
   <nz-list *ngIf="similarFilm.length > 0" [nzDataSource]="similarFilm" [nzRenderItem]="item" [nzGrid]="{ gutter: 8, xs: 24, sm: 12, md: 6, lg: 6, xl: 4 }">
     <ng-template #item let-item>
       <nz-list-item [nzContent]="nzContent" >
