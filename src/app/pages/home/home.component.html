@@ -42,7 +42,7 @@
   <h3 *ngIf="watching.length > 0" style="color: white;">Xem tiếp phim đang xem</h3>
   <nz-list *ngIf="watching.length > 0" [nzDataSource]="watching" [nzRenderItem]="item" [nzGrid]="{ gutter: 8, xs: 24, sm: 12, md: 6, lg: 6, xl: 4 }">
     <ng-template #item let-item>
-      <nz-list-item [nzContent]="nzContent" >
+      <nz-list-item [nzContent]="nzContent">
         <ng-template #nzContent>
           <nz-card  nzHoverable style="width: 200px; height:280px ; border: 0px solid white; margin-bottom: 15px;" [nzCover]="coverTemplate" [nzBodyStyle]="body_style">
              <!-- <div style="width: 170px; margin-bottom: 60px;">

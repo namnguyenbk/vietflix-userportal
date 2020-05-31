@@ -1,7 +1,7 @@
 
           <div class="container">
-          <video id="plyrID" [ngStyle]="video_size"  controls playsinline>
-             <source src="{{current_video_url}}" >
+          <video id="plyrID" [ngStyle]="video_size" [src]="current_video_url"  controls playsinline>
+             <!-- <source src="{{current_video_url}}" > -->
             </video>
             <h3 class="class-h4" *ngIf="film && film.type==2" style="color: white;">{{film.name}} - Tập {{current_episode}}</h3>
         </div>

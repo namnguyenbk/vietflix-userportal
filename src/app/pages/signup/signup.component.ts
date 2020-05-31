@@ -80,7 +80,7 @@ export class SignupComponent implements OnInit {
         this.show_error = false;
         this.access_token = res.access_token;
         localStorage.removeItem('access_token');
-        localStorage.setItem('access_token', this.access_token)
+        // localStorage.setItem('email_verify', this.current_email)
         // this.auth_service.login(email, password).subscribe((res2:any)=>{
         //   this.show_error = false;
         //   this.isLoading_login = false;

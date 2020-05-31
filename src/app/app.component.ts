@@ -53,6 +53,14 @@ export class AppComponent implements OnInit {
     }
 
     this.user_services.get_me().subscribe((res:any)=>{
+      if(res.status == 'not_verified'){
+        this.router.navigate(['login']);
+      }
+
+      if(res.status == 'blocked'){
+        this.router.navigate(['login']);
+      }
+
       this.me = res;
       this.is_logged = true;
 
@@ -71,6 +79,9 @@ export class AppComponent implements OnInit {
         new_password: [null, [Validators.required]],
         renew_password: [null, [Validators.required]],
       }); 
+    }, error =>{
+      localStorage.clear();
+      // this.router.navigate(['login']);
     }); 
 
   }

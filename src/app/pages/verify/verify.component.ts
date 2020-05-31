@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-verify',
@@ -20,10 +21,19 @@ export class VerifyComponent implements OnInit {
 
   current_email:string;
 
+  check = false;
+
   constructor(private fb: FormBuilder, private auth_service: AuthService, public router: Router,
-    private notification: NzNotificationService) { }
+    private notification: NzNotificationService, private user_service : UserService) { }
 
   ngOnInit() {
+
+    this.user_service.get_me().subscribe((res:any)=>{
+      if(res.status != 'not_verified'){
+        this.router.navigate(['home']);
+        this.check = true;
+      }
+    })
 
     this.tokenForm = this.fb.group({
       token: [null, [Validators.required]],
@@ -57,8 +67,7 @@ export class VerifyComponent implements OnInit {
       (res : any) =>{
         this.isLoading_checkToken = false;
         this.isTokenPass = false;
-        localStorage.setItem('access_token', localStorage.getItem('access_token'))
-        this.router.navigate(['../']);
+        this.router.navigate(['login']);
     },
 
       (error) => {

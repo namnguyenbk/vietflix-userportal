@@ -90,21 +90,26 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
       window.scroll(0,0);
       this.film.meta_data.trailer_url = "https://www.youtube-nocookie.com/embed/" + this.film.meta_data.trailer_url
 
+
       if(this.film.video_url && this.film.type == "1"){
         this.current_video_url = this.film.video_url;
       }else{
-        this
-        .current_video_url = this.film.episodes[0]['video_url'];
-      }
-      if(this.film.type == "1"){
-        if(localStorage.getItem('video_url') != this.film.video_url){
-          localStorage.setItem('video_url', this.film.video_url)
-          this.router.navigateByUrl(`/film/${this.film.id}/episodes/0`, { skipLocationChange: true }).then(() => {
-            this.router.navigate([`/film/${this.film.id}`]);
-          }); 
+        if(!is_continue_watching){
+          this
+          .current_video_url = this.film.episodes[0]['video_url'];
         }
-      }else{
+
       }
+
+      // if(this.film.type == "1"){
+      //   if(localStorage.getItem('video_url') != this.film.video_url){
+      //     localStorage.setItem('video_url', this.film.video_url)
+      //     this.router.navigateByUrl(`/film/${this.film.id}/episodes/0`, { skipLocationChange: true }).then(() => {
+      //       this.router.navigate([`/film/${this.film.id}`]);
+      //     }); 
+      //   }
+      // }else{
+      // }
 
       this.comment_service.get_comments(this.film.id).subscribe((res: any) => {
         this.list_comments = res;
@@ -153,7 +158,7 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
         meta_data: JSON.stringify({
           episode: this.current_episode,
           duration: this.player.duration,
-          video_url: localStorage.getItem('video_url')
+          video_url: this.current_video_url
         })
       }
 
@@ -239,12 +244,13 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
   }
 
   change_episode(id: string, url: string){
-    localStorage.setItem('video_url', url);
-    localStorage.setItem('video_id', id);
+    this.current_video_url = url;
+    // localStorage.setItem('video_url', url);
+    // localStorage.setItem('video_id', id);
     window.scroll(0,0);
-    this.router.navigateByUrl(`/film/${this.film.id}/episodes/0`, { skipLocationChange: true }).then(() => {
-      this.router.navigate([`/film/${this.film.id}`]);
-    }); 
+    // this.router.navigateByUrl(`/film/${this.film.id}/episodes/0`, { skipLocationChange: true }).then(() => {
+    //   this.router.navigate([`/film/${this.film.id}`]);
+    // }); 
   }
 
   get_trailer_url(){

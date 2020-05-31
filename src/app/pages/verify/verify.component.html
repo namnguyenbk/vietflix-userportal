@@ -1,6 +1,6 @@
-<nz-result nzStatus="403" [nzTitle]="null" [nzSubTitle]="null" >
+<nz-result nzStatus="403" [nzTitle]="null" [nzSubTitle]="null" *ngIf="check">
     <div nz-result-extra>
-        <h4 class="text-403">Tài khoản chưa được xác thực</h4>
+        <h4 class="text-403">Tài khoản <i>{{current_email}}</i> chưa được xác thực</h4>
       <button nz-button nzType="primary" (click)="open_modal_token()">Nhập mã xác thực</button>
     </div>
   </nz-result>
@@ -10,7 +10,7 @@
     <nz-alert nzType="success" nzMessage="Mã xác thực đã được gửi tới {{current_email}}" nzShowIcon>
     </nz-alert>
     <br>
-    <span>Nếu chưa nhận được trong vòng 5 phút </span> <button nz-button nzType="primary" (click)="resend_email()" [nzLoading]="isLoading_resend">Gửi lại</button>
+    <span>Nếu chưa nhận được    </span> <button nz-button nzType="primary" (click)="resend_email()" [nzLoading]="isLoading_resend">Gửi lại</button>
     <form nz-form  [formGroup]="tokenForm">
       <br>
       <nz-form-item>

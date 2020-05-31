@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
         this.isLoading_login = false;
         if(res.user.status == 'not_verified'){
           localStorage.setItem('email_verify', email)
-          this.router.navigate(['verify'])
+          this.router.navigate(['verify']);
           return ;
         }
         if(res.user.status == 'blocked'){

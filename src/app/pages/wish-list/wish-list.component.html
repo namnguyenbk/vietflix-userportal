@@ -2,6 +2,7 @@
 <div class="example" *ngIf="is_getting_wishlist">
     <nz-spin nzSimple></nz-spin>
   </div>
+  <h2 *ngIf="wishlist.length == 0 && !is_getting_wishlist" style="color: white; text-align: center; margin-top: 60px;">Không có phim nào</h2>
   <h3 *ngIf="wishlist.length > 0" style="color: white;">Danh sách yêu thích của bạn</h3>
   <!-- <nz-skeleton [nzActive]="true" [nzLoading]=""></nz-skeleton> -->
   <nz-list *ngIf="wishlist.length > 0" [nzDataSource]="wishlist" [nzRenderItem]="item" [nzGrid]="{ gutter: 8, xs: 24, sm: 12, md: 6, lg: 6, xl: 4 }">
