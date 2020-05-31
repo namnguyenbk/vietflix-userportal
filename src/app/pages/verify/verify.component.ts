@@ -27,19 +27,25 @@ export class VerifyComponent implements OnInit {
     private notification: NzNotificationService, private user_service : UserService) { }
 
   ngOnInit() {
+    this.current_email = localStorage.getItem('email_verify');
 
+    if(!this.current_email){
+      this.router.navigate(['login'])
+    }
     this.user_service.get_me().subscribe((res:any)=>{
       if(res.status != 'not_verified'){
         this.router.navigate(['home']);
         this.check = true;
       }
-    })
+    }, error=>{
+      this.check = true;
+    });
 
     this.tokenForm = this.fb.group({
       token: [null, [Validators.required]],
     });
 
-    this.current_email = localStorage.getItem('email_verify')
+
   }
 
   open_modal_token(){
@@ -63,7 +69,7 @@ export class VerifyComponent implements OnInit {
     }
 
     this.isLoading_checkToken = true;
-    this.auth_service.check_verification_code(localStorage.getItem('email_verify'), token, '').subscribe(
+    this.auth_service.check_verification_code(this.current_email, token, '').subscribe(
       (res : any) =>{
         this.isLoading_checkToken = false;
         this.isTokenPass = false;
