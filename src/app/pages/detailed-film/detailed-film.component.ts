@@ -31,14 +31,12 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
   slice_comments = [];
 
   current_episode = localStorage.getItem('video_id');
-  // current_video_url : string;
 
   is_love = false;
 
   comment: string;
   submitting= false;
   public player;
-  public player2;
 
   current_video_url = localStorage.getItem('video_url');
 
@@ -66,10 +64,10 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
   start_time = 0;
 
 
-  
+
   constructor(private route: ActivatedRoute, private film_service: FilmService, private comment_service: CommentService,
     private modalService: NzModalService, private user_service: UserService, private router: Router,
-    public sanitizer : DomSanitizer, private message: NzMessageService) { 
+    public sanitizer : DomSanitizer, private message: NzMessageService) {
       let is_continue_watching = this.route.snapshot.queryParamMap.get("continue_watching")
       if(is_continue_watching){
         console.log('is', is_continue_watching);
@@ -101,16 +99,6 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
 
       }
 
-      // if(this.film.type == "1"){
-      //   if(localStorage.getItem('video_url') != this.film.video_url){
-      //     localStorage.setItem('video_url', this.film.video_url)
-      //     this.router.navigateByUrl(`/film/${this.film.id}/episodes/0`, { skipLocationChange: true }).then(() => {
-      //       this.router.navigate([`/film/${this.film.id}`]);
-      //     }); 
-      //   }
-      // }else{
-      // }
-
       this.comment_service.get_comments(this.film.id).subscribe((res: any) => {
         this.list_comments = res;
         this.slice_comments = this.list_comments.slice(0, 10)
@@ -120,15 +108,15 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
       this.user_service.get_me().subscribe((res:any)=>{
         this.me = res;
         this.temp_score = this.score;
-        this.film_service.view(this.film.id, this.me.id).subscribe(res=>{window.scroll(0,0);}, error=>{window.scroll(0,0);});    
+        this.film_service.view(this.film.id, this.me.id).subscribe(res=>{window.scroll(0,0);}, error=>{window.scroll(0,0);});
       }, error=>{
         this.is_logged = false;
-        this.film_service.view(this.film.id, null).subscribe(res=>{window.scroll(0,0);}, error=>{window.scroll(0,0);}); 
+        this.film_service.view(this.film.id, null).subscribe(res=>{window.scroll(0,0);}, error=>{window.scroll(0,0);});
       });
 
       this.film_service.get_similar_films(this.film.id).subscribe((res:any)=>{
         this.similarFilm = res;
-      }); 
+      });
 
     }, error =>{
       this.film_service.get_film_non_user(this.film_id).subscribe((res:any)=>{
@@ -139,57 +127,42 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
         this.is_logged = false;
       })
     });
-      
+
     }
 
   ngOnDestroy(): void {
-    if(this.player){
-      
+    if (this.player) {
+      let remaining_watching_time = this.player.currentTime;
+      console.log('Remaining watching time: ', remaining_watching_time, remaining_watching_time > 120);
 
-    let remaining_watching_time = this.player.currentTime;
-    console.log('Remaining watching time: ', remaining_watching_time, remaining_watching_time > 120);
+      if (parseInt(remaining_watching_time) > 0) {
+        let activity = {
+          account_id: this.me.id,
+          film_id: this.film.id,
+          name: 'watching',
+          data: remaining_watching_time,
+          meta_data: JSON.stringify({
+            episode: this.current_episode,
+            duration: this.player.duration,
+            video_url: this.current_video_url
+          })
+        }
 
-    if(parseInt(remaining_watching_time) > 0){
-      let activity = {
-        user_id: this.me.id,
-        film_id: this.film.id,
-        name: 'watching',
-        data: remaining_watching_time,
-        meta_data: JSON.stringify({
-          episode: this.current_episode,
-          duration: this.player.duration,
-          video_url: this.current_video_url
-        })
+        localStorage.setItem(`setting_continue`, 'true')
+
+        this.film_service.remaining_watching_time(activity).subscribe(res => {
+          localStorage.setItem(`setting_continue`, 'false');
+        }, error => {
+          this.message.create('error', error.error.error_message);
+        });
+
       }
-
-      // alert(localStorage.getItem('video_url') )
-
-      localStorage.setItem(`setting_continue`, 'true')
-
-      // async function send_activity(){
-      //   await this.film_service.remaining_watching_time(activity).toPromise().then(
-      //     (res: any)=>{
-      //       console.log(1)
-      //     }, error => {this.message.create('error', error.error.error_message);}
-      //   )
-      // }
-
-      // send_activity();
-      // console.log('fejhje')
-
-      this.film_service.remaining_watching_time(activity).subscribe(res=>{
-        localStorage.setItem(`setting_continue`, 'false');
-      }, error=>{
-        this.message.create('error', error.error.error_message);
-      });  
-
     }
-  }
   }
 
   ngOnInit() {
     window.scroll(0,0);
-    this.player = new Plyr('#plyrID', { 
+    this.player = new Plyr('#plyrID', {
       captions: { active: true }
     });
 
@@ -211,6 +184,33 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
 
     this.player.on('pause', event => {
       this.trailer = true;
+      if (this.player) {
+        let remaining_watching_time = this.player.currentTime;
+        console.log('Remaining watching time: ', remaining_watching_time, remaining_watching_time > 120);
+
+        if (parseInt(remaining_watching_time) > 0) {
+          let activity = {
+            account_id: this.me.id,
+            film_id: this.film.id,
+            name: 'watching',
+            data: remaining_watching_time,
+            meta_data: JSON.stringify({
+              episode: this.current_episode,
+              duration: this.player.duration,
+              video_url: this.current_video_url
+            })
+          }
+
+          localStorage.setItem(`setting_continue`, 'true')
+
+          this.film_service.remaining_watching_time(activity).subscribe(res => {
+            localStorage.setItem(`setting_continue`, 'false');
+          }, error => {
+            this.message.create('error', error.error.error_message);
+          });
+
+        }
+      }
     });
 
     this.player.on('enterfullscreen', event =>{
@@ -225,18 +225,6 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
       }
     });
 
-          // this.player2 = new Plyr('#plyrID2', { 
-      //   captions: { active: true }
-      // });
-      // this.player2.source = {
-      //   type: 'video',
-      //   sources: [
-      //     {
-      //       src: this.film.meta_data.trailer_url,
-      //       provider: 'youtube',
-      //     },
-      //   ],
-      // };
   }
 
   onLoadMore(): void {
@@ -245,12 +233,7 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
 
   change_episode(id: string, url: string){
     this.current_video_url = url;
-    // localStorage.setItem('video_url', url);
-    // localStorage.setItem('video_id', id);
     window.scroll(0,0);
-    // this.router.navigateByUrl(`/film/${this.film.id}/episodes/0`, { skipLocationChange: true }).then(() => {
-    //   this.router.navigate([`/film/${this.film.id}`]);
-    // }); 
   }
 
   get_trailer_url(){
@@ -286,7 +269,7 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
 
   send_rating(score:number){
     let activity = {
-      user_id: this.me.id,
+      account_id: this.me.id,
       film_id: this.film.id,
       name: 'rate',
       data: score
@@ -297,11 +280,12 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
       // this.message.create('success', `Đã lưu ${this.film.name} vào yêu thích`);
     }, error=>{
       this.message.create('error', error.error.error_message);
-    });    
+    });
   }
 
 
   delete_comment(comment_id:number){
+
     this.list_comments = this.list_comments.filter(function(value, index, arr){ return value.id != comment_id;});
       this.slice_comments = this.list_comments.filter(function(value, index, arr){ return value.id != comment_id;});
     this.comment_service.delete_comments(comment_id).subscribe(res=>{
@@ -327,7 +311,7 @@ export class DetailedFilmComponent implements OnInit, OnDestroy {
 
     this.router.navigateByUrl(`/film/${film_id}/episodes/1`, { skipLocationChange: true }).then(() => {
       this.router.navigate([`/film/${film_id}`]);
-    }); 
+    });
   }
 
 }

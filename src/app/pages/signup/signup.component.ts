@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { NzNotificationService } from 'ng-zorro-antd';
 import { UserService } from 'src/app/services/user.service';
+import {query} from "@angular/animations";
 
 @Component({
   selector: 'app-signup',
@@ -19,15 +20,11 @@ export class SignupComponent implements OnInit {
   error_message = null;
 
   tokenForm: FormGroup;
-  show_token_error :boolean;
-  isTokenPass : boolean;
 
   isLoading_login = false;
-  isLoading_resend = false;
-  isLoading_checkToken = false;
-  
+
   constructor(private fb: FormBuilder, private auth_service: AuthService, public router: Router, private user_services: UserService,
-    private notification: NzNotificationService) { 
+    private notification: NzNotificationService) {
       this.user_services.get_me().subscribe(res=>{
         this.router.navigate(['home'])
       });
@@ -74,20 +71,13 @@ export class SignupComponent implements OnInit {
     this.show_error = false;
     this.auth_service.signup(account).subscribe(
       (res : any) =>{
-        this.open_modal_token();
         this.current_email = email;
         this.isLoading_login = false;
         this.show_error = false;
         this.access_token = res.access_token;
-        localStorage.removeItem('access_token');
-        // localStorage.setItem('email_verify', this.current_email)
-        // this.auth_service.login(email, password).subscribe((res2:any)=>{
-        //   this.show_error = false;
-        //   this.isLoading_login = false;
-        //   this.router.navigate(['../']);
-        //   localStorage.setItem('access_token', res2.access_token);
-        // })
-        
+        localStorage.setItem('access_token', this.access_token)
+        this.router.navigate(['home'],{queryParams: {type: 'reload'}});
+        // location.reload();
     },
 
       (error) => {
@@ -97,56 +87,5 @@ export class SignupComponent implements OnInit {
     }
     );
   }
-
-  open_modal_token(){
-    this.isTokenPass = true;
-  }
-
-  handleCancelToken(){
-    this.isTokenPass = false;
-  }
-
-  handleOkToken(){
-    for (const i in this.tokenForm.controls) {
-      this.tokenForm.controls[i].markAsDirty();
-      this.tokenForm.controls[i].updateValueAndValidity();
-    }
-
-    var token = this.tokenForm.controls['token'].value;
-
-    if(this.tokenForm.controls['token'].invalid){
-      return 0;
-    }
-
-    this.isLoading_checkToken = true;
-    this.auth_service.check_verification_code(this.current_email, token, '').subscribe(
-      (res : any) =>{
-        this.isLoading_checkToken = false;
-        this.isTokenPass = false;
-        localStorage.setItem('access_token', this.access_token)
-        this.router.navigate(['../']);
-        location.reload()
-    },
-
-      (error) => {
-        this.isLoading_checkToken = false;
-        this.show_token_error = true;
-    }
-    );
-  }
-
-  resend_email(){
-    this.isLoading_resend = true;
-    this.auth_service.reset_password(this.current_email).subscribe(
-      (res : any) =>{
-        this.isLoading_resend = false;
-    },
-
-      (error) => {
-        this.isLoading_resend = false;
-    }
-    );
-  }
-
 
 }

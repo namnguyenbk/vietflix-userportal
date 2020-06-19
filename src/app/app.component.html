@@ -4,15 +4,15 @@
       <div class="app-header">
         <div class="sidebar-logo">
           <a  (click)="reload_home()">
-            <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
+            <img src="https://vietflix.s3-ap-southeast-1.amazonaws.com/images/bbfadad7-32be-4ad1-8d12-a2a8464a8f9f_200x200.png" alt="logo">
             <h1>FilmO</h1>
           </a>
         </div>
-        
+
         <div class="search-bar">
           <nz-input-group  nzSearch [nzAddOnAfter]="suffixIconSearch" class="search-inputs">
             <!-- <form > -->
-              <input [(ngModel)]="inputValue"  (keyup.enter)="search()" 
+              <input [(ngModel)]="inputValue"  (keyup.enter)="search()"
               style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: 0px solid rgb(20, 20, 20); border-bottom: 1px solid white;" type="text" nz-input placeholder="Nhập từ khoá tìm kiếm" />
               <ng-template #suffixIconSearch>
                <button (click)="search()" nz-button nzSearch style="color: white; background-color: rgb(20, 20, 20); border-radius: 0px; border: rgb(20, 20, 20);" ><i nz-icon nzType="search"></i></button>
@@ -62,7 +62,7 @@
           </nz-dropdown-menu>
 
           <div>
-            <!-- <nz-avatar nz-dropdown [nzDropdownMenu]="menu" nzText="{{me.name[0]}}" [nzSize]="30" *ngIf="me" 
+            <!-- <nz-avatar nz-dropdown [nzDropdownMenu]="menu" nzText="{{me.name[0]}}" [nzSize]="30" *ngIf="me"
             style="background-color:#87d068;"
             ></nz-avatar> -->
             <!-- <a nz-dropdown [nzDropdownMenu]="menu"  *ngIf="me">
@@ -116,7 +116,7 @@
 </div>
 </nz-modal>
 
-<nz-modal *ngIf="me" [(nzVisible)]="isTokenPass" nzTitle="Nhập mã xác thực" (nzOnCancel)="handleCancelToken()" 
+<nz-modal *ngIf="me" [(nzVisible)]="isTokenPass" nzTitle="Nhập mã xác thực" (nzOnCancel)="handleCancelToken()"
 [(nzClosable)]="!isLoadingToken" [(nzMaskClosable)]="!isLoadingToken"
 >
   <nz-alert nzType="success" nzMessage="Mã xác thực đã được gửi tới {{this.change_info_form.controls['email'].value}}" nzShowIcon>

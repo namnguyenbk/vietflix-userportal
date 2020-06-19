@@ -61,12 +61,7 @@ export class LoginComponent implements OnInit {
       (res : any) =>{
         this.show_error = false;
         this.isLoading_login = false;
-        if(res.user.status == 'not_verified'){
-          localStorage.setItem('email_verify', email)
-          this.router.navigate(['verify']);
-          return ;
-        }
-        if(res.user.status == 'blocked'){
+        if(res.account.status == 'blocked'){
           this.is_blocked = true;
           this.has_role = true;
           return;

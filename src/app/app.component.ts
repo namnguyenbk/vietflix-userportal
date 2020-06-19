@@ -69,20 +69,20 @@ export class AppComponent implements OnInit {
         name: [this.me.name, [Validators.required]],
         password: [null, [Validators.required]],
       });
-  
+
       this.tokenForm = this.fb.group({
         token: [null, [Validators.required]],
       });
-    
+
       this.change_passwors_form = this.fb.group({
         old_password: [null, [Validators.required]],
         new_password: [null, [Validators.required]],
         renew_password: [null, [Validators.required]],
-      }); 
+      });
     }, error =>{
       localStorage.clear();
       // this.router.navigate(['login']);
-    }); 
+    });
 
   }
   ngOnInit(): void {
@@ -148,22 +148,11 @@ export class AppComponent implements OnInit {
       this.change_info_form.controls['password'].reset();
       this.show_token_error = false;
       this.is_show_change_info = false;
-      if(email != this.me.email){
-        this.is_change_email = true;
-        this.isTokenPass = true;
-        this.waiting_token = true;
-        this.user_services.get_me().subscribe(res=>{
-          this.me =res;
-          this.new_email = email;
-          this.isLoadingInfo = false;
-        });
-      }else{
-        this.user_services.get_me().subscribe(res=>{
-          this.me =res;
-          this.isLoadingInfo = false;
-        });
-        this.notification.create('success', 'Thành công', 'Đã cập nhật thông tin');
-      }
+      this.user_services.get_me().subscribe(res=>{
+        this.me =res;
+        this.isLoadingInfo = false;
+      });
+      this.notification.create('success', 'Thành công', 'Đã cập nhật thông tin');
     }, error=>{
       this.change_info_form.controls['password'].reset();
       this.isLoadingInfo = false;
@@ -194,7 +183,7 @@ export class AppComponent implements OnInit {
         this.isTokenPass = false;
         this.waiting_token = false;
         this.tokenForm.reset()
-        this.notification.create('success', 'Thành công', 'Đã cập nhật thông tin')        
+        this.notification.create('success', 'Thành công', 'Đã cập nhật thông tin')
     },
 
       (error) => {
@@ -215,8 +204,8 @@ export class AppComponent implements OnInit {
       this.change_passwors_form.controls[i].updateValueAndValidity();
     }
 
-    var old_password = this.change_passwors_form.controls['old_password'].value; 
-    var new_password = this.change_passwors_form.controls['new_password'].value; 
+    var old_password = this.change_passwors_form.controls['old_password'].value;
+    var new_password = this.change_passwors_form.controls['new_password'].value;
     var renew_password = this.change_passwors_form.controls['renew_password'].value;
 
     if(new_password != renew_password){

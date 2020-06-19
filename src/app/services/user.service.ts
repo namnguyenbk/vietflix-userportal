@@ -18,48 +18,8 @@ export class UserService {
     return this.http.get(login_url, {headers})
   }
 
-  update_role(user_id: number, role: string){
-    let url = environment.base_url_api + `/roles`
-    let access_token = localStorage.getItem('access_token')
-    let headers = {
-      'Authorization': 'Bearer '+ access_token
-    }
-
-    return this.http.put(url,{user_id: user_id, role: role}, {headers})
-  }
-
-  update_status(user_id: number, status: string){
-    let url = environment.base_url_api + `/status`
-    let access_token = localStorage.getItem('access_token')
-    let headers = {
-      'Authorization': 'Bearer '+ access_token
-    }
-
-    return this.http.put(url,{user_id: user_id, status: status}, {headers})
-  }
-
-  get_user(){
-    let url = environment.base_url_api + `/users`
-    let access_token = localStorage.getItem('access_token')
-    let headers = {
-      'Authorization': 'Bearer '+ access_token
-    }
-
-    return this.http.get(url, {headers})
-  }
-
-  search_user(user: any){
-    let url = environment.base_url_api + `/search-user`
-    let access_token = localStorage.getItem('access_token')
-    let headers = {
-      'Authorization': 'Bearer '+ access_token
-    }
-
-    return this.http.post(url,user, {headers})
-  }
-
   update(id:number, user:any){
-    let url = environment.base_url_api + `/user/${id}`
+    let url = environment.base_url_api + `/account/${id}`
     let access_token = localStorage.getItem('access_token')
     let headers = {
       'Authorization': 'Bearer '+ access_token
@@ -68,15 +28,4 @@ export class UserService {
     return this.http.put(url,user, {headers})
   }
 
-  update_pass(user:any){
-    let url = environment.base_url_api + `/change-pass`
-    let access_token = localStorage.getItem('access_token')
-    let headers = {
-      'Authorization': 'Bearer '+ access_token
-    }
-
-    return this.http.put(url,user, {headers})
-  }
-
-  
 }
